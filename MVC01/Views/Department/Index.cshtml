@@ -1,0 +1,37 @@
+﻿@model ICollection<MVC01.Models.Department>
+@section Header {
+    <h1 class="text-center">Departments Management</h1>
+}
+@section Nav {
+    <a class="navbar-brand" asp-controller="Department" asp-action="Index">Department Management</a>
+}
+<div class="container ">
+    <a class="btn btn-info " asp-action="AddDepartment">Add Department</a>
+    <table class="table table-striped">
+        <tr>
+            <th>DeptId</th>
+            <th>Name</th>
+            <th>Location</th>
+            <th>PhoneNumber</th>
+            <th>Number of student</th>
+            <th>Number of Instructor</th>
+            <th>Actions</th>
+
+        </tr>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student?.DeptId</td>
+                <td>@student?.Name</td>
+                <td>@student?.Location</td>
+                <td>@student?.PhoneNumber</td>
+                <td>@student?.Students?.Count()</td>
+                <td>@student?.Instructors?.Count()</td>
+                <td>
+                    <a class="btn btn-warning btn-sm" asp-action="EditDepartment" asp-route-id="@student?.DeptId">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="DeleteDepartment" asp-route-id="@student?.DeptId">Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

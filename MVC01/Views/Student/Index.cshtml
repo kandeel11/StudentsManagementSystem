@@ -1,0 +1,35 @@
+﻿<div class="container ">
+<a class="btn btn-info " asp-action="AddStudent">Add Student</a>
+@section Header{
+    <h1>Students Management</h1>
+    }
+
+    @section Nav {
+        <a class="navbar-brand" asp-controller="Student" asp-action="Index">Student Management</a>
+    }
+<table class="table table-striped">
+    <tr>
+        <th>SSn</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Image</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var student in Model)
+    {
+        <tr>
+            <td>@student.SSn</td>
+            <td>@student.Name</td>
+            <td>@student.Address</td>
+            <td>@student.Email</td>
+            <td>@student.Phone</td>
+            <td><img src="/Images/@student.Image" alt="Student Image" width="100" /></td>
+            <td>
+                <a class="btn btn-warning btn-sm" asp-action="EditStudent" asp-route-id="@student.SSn">Edit</a>
+            </td>
+        </tr>
+    }
+</table>
+</div>

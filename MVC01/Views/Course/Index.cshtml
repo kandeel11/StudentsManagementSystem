@@ -1,0 +1,39 @@
+@model ICollection<MVC01.Models.Course>
+@section Nav {
+    <a class="navbar-brand" asp-controller="Course" asp-action="Index">Course Management</a>
+}
+@section Header {
+    <h1 class="text-center">Courses Management</h1>
+}
+
+<div class="container mt-4">
+    <h2>Courses</h2>
+    <a class="btn btn-info mb-3" asp-action="AddCourse">Add Course</a>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Course ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Total Degree</th>
+                <th>Min Degree</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if(Model != null)
+            {
+                foreach (var course in Model)
+                {
+                    <tr>
+                        <td>@course.Crs_Id</td>
+                        <td>@course.Name</td>
+                        <td>@course.Description</td>
+                        <td>@course.Total_Degree</td>
+                        <td>@course.Min_Degree</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,63 @@
+﻿@model MVC01.Models.Student 
+@section Header {
+    <h1>ADD Student</h1>
+}
+
+@section Nav {
+    <a class="navbar-brand" asp-controller="Student" asp-action="Index">Student Management</a>
+}
+<div class="container mt-4">
+    <h2 class="mb-4">Add New Student</h2>
+
+    <form  method="post" action="" enctype="multipart/form-data">
+        
+        <div class="row">
+           
+
+            <div class="col-md-6 mb-3">
+                <label  class="form-label">Student Name</label>
+                <input name="Name" class="form-control" placeholder="Enter student name" value="@Model?.Name" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label  class="form-label">Address</label>
+                <input name="Address" class="form-control" placeholder="Enter address" value="@Model?.Address" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label  class="form-label">Phone Number</label>
+                <input name="Phone" class="form-control" placeholder="Enter phone number" value="@Model?.Phone" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label  class="form-label">Email Address</label>
+                <input name="Email" type="email" class="form-control" placeholder="example@domain.com" value="@Model?.Email" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label  class="form-label">Department</label>
+                <select name="deptId" class="form-select" >
+
+                    <option value="" disabled selected>-- Select Department --</option>
+                    @foreach (var dept in ViewBag.Departments)
+                    {
+                        <option value="@dept.DeptId">@dept.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-12 mb-4">
+                <label class="form-label">Student Image</label>
+                <input  type="file" name="Image" class="form-control" accept="image/*" value="@Model?.Image" />
+            </div>
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4">Save</button>
+            <a class="btn btn-secondary px-4" asp-action="Index">Return</a>
+        </div>
+
+    </form>
+</div>

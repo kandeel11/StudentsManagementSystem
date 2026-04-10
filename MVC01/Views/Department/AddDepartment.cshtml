@@ -1,0 +1,39 @@
+﻿@model MVC01.Models.Department
+@section Nav {
+    <a class="navbar-brand" asp-controller="Department" asp-action="Index">Department Management</a>
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Add New Student</h2>
+
+    <form method="post" asp-action="AddDepartment">
+        
+        <div class="row">
+           
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Name" class="form-label">Department Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter Department name" value="@Model?.Name" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="Location" class="form-label">Location</label>
+                <input asp-for="Location" class="form-control" placeholder="Enter address" value="@Model?.Location" />
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                <input asp-for=PhoneNumber class="form-control" placeholder="Enter phone number" value="@Model?.PhoneNumber" />
+            </div>
+
+        </div>
+
+        <hr class="mb-4">
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary px-4">Save</button>
+            <a class="btn btn-secondary px-4" asp-action="Index">Return</a>
+        </div>
+
+    </form>
+</div>

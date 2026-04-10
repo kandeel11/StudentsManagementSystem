@@ -1,0 +1,79 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@section Header {
+    <h1>Dtails of Student </h1>
+}
+
+@section Nav {
+    <a class="navbar-brand" asp-controller="Student" asp-action="Index">Student Management</a>
+}
+@model MVC01.ViewModels.StudentDetailsVM
+<div class="container mt-5">
+    <div class="border border-primary border-3 p-4 mx-auto bg-white rounded" style="max-width: 500px;">
+        
+        <h4 class="text-primary fw-bold mb-4">Student Details</h4>
+
+        <div class="row mb-3 align-items-center">
+            <div class="col-3 text-primary fw-bold">name</div>
+            <div class="col-4 text-dark">@Model.Name</div>
+            <div class="col-5 text-primary fw-bold text-end">@Model.DepartmentName</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-3 text-primary fw-bold">address</div>
+            <div class="col-9 text-dark">@Model.Address</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-3 text-primary fw-bold">phone</div>
+            <div class="col-9 text-dark">@Model.Phone</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-3 text-primary fw-bold">email</div>
+            <div class="col-9 text-dark">@Model.Email</div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-3 text-primary fw-bold">image</div>
+            <div class="col-9">
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img src="~/images/@Model.Image" alt="Student Image" class="img-fluid rounded mt-1" style="max-width: 120px;" />
+                }
+                else
+                {
+                    <span class="text-muted fst-italic">No Image</span>
+                }
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h5 class="text-primary fw-bold mb-3">courses</h5>
+
+            @if (Model.Courses != null && Model.Courses.Any())
+            {
+                <div class="pe-5">
+                    @foreach (var course in Model.Courses)
+                    {
+                        string badgeClass = course.Degree > course.MinDegree ? "text-success" : "text-danger";
+
+                        <div class="d-flex justify-content-between mb-2 fw-bold">
+                            <span class="text-primary">@course.Name</span>
+                            <span class="@badgeClass">@course.Degree</span>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small">No courses registered yet.</p>
+            }
+        </div>
+
+    </div>
+</div>
