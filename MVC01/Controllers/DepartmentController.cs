@@ -51,7 +51,7 @@ namespace MVC01.Controllers
         {
             if (BL.DepartmentBL.DeleteDepartment(id))
                 return RedirectToAction("Index");
-            return RedirectToAction("Index"); // fallback
+            return RedirectToAction("Index"); 
         }
     }
 }

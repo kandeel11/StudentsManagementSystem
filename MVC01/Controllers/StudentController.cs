@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace MVC01.Controllers
 {
@@ -40,13 +41,15 @@ namespace MVC01.Controllers
                 {
                     Directory.CreateDirectory(imagesPath);
                 }
-                var fileName = Image.FileName;
+
+                StringBuilder Sp = new StringBuilder();
+                Sp.Append(Guid.NewGuid().ToString());
+                var fileName = Sp.Append(Path.GetExtension(Image.FileName)).ToString();
                 var filePath = Path.Combine(imagesPath, fileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     Image.CopyTo(stream);
                 }
-
                 student.Image = fileName;
             }
             BL.StudentBL studentBL = new BL.StudentBL();
@@ -61,8 +64,7 @@ namespace MVC01.Controllers
                 return View(student);
             }
         }
-
-        public IActionResult EditStudent(int id)
+        public IActionResult EditStudent(int id) 
         {
             BL.StudentBL studentBL = new BL.StudentBL();
             var student = studentBL.GetStudentById(id);
@@ -94,14 +96,12 @@ namespace MVC01.Controllers
                     Image.CopyTo(stream);
                 }
                 student.Image = fileName;
-            }
-
+            } 
             BL.StudentBL studentBL = new BL.StudentBL();
             if (studentBL.UpdateStudent(student))
             {
                 return RedirectToAction("Index");
             }
-
             ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
             return View(student);
         }
