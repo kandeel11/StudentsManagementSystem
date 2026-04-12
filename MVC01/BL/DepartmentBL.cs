@@ -26,7 +26,10 @@ namespace MVC01.BL
 
         public static Models.Department GetDepartmentById(int id)
         {
-            return db.Departments.FirstOrDefault(d => d.DeptId == id);
+            return db.Departments
+                .Include(d => d.Students)
+                .Include(d => d.Instructors)
+                .FirstOrDefault(d => d.DeptId == id);
         }
 
         public static bool UpdateDepartment(Models.Department department)

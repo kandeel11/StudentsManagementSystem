@@ -15,28 +15,37 @@
            
 
             <div class="col-md-6 mb-3">
-                <label  class="form-label">Student Name</label>
-                <input name="Name" class="form-control" placeholder="Enter student name" value="@Model?.Name" />
+                <label asp-for="Name" class="form-label">Student Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter student name" value="@Model?.Name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label  class="form-label">Address</label>
-                <input name="Address" class="form-control" placeholder="Enter address" value="@Model?.Address" />
+                <label asp-for="Address" class="form-label">Address</label>
+                <input asp-for="Address" class="form-control" placeholder="Enter address" value="@Model?.Address" />
+                <span asp-validation-for="Address" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label  class="form-label">Phone Number</label>
-                <input name="Phone" class="form-control" placeholder="Enter phone number" value="@Model?.Phone" />
+                <label asp-for="Phone" class="form-label">Phone Number</label>
+                <input asp-for="Phone" class="form-control" placeholder="Enter phone number" value="@Model?.Phone" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label  class="form-label">Email Address</label>
-                <input name="Email" type="email" class="form-control" placeholder="example@domain.com" value="@Model?.Email" />
+                <label asp-for="Email" class="form-label">Email Address</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="example@domain.com" value="@Model?.Email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Age" class="form-label">Age</label>
+                <input asp-for="Age" type="number" class="form-control" placeholder="Enter age" value="@Model?.Age" />
+                <span asp-validation-for="Age" class="text-danger"></span>
             </div>
 
             <div class="col-md-6 mb-3">
-                <label  class="form-label">Department</label>
-                <select name="deptId" class="form-select" >
+                <label asp-for="DeptId" class="form-label">Department</label>
+                <select asp-for="DeptId" class="form-select" >
 
                     <option value="" disabled selected>-- Select Department --</option>
                     @foreach (var dept in ViewBag.Departments)
@@ -47,8 +56,9 @@
             </div>
 
             <div class="col-md-12 mb-4">
-                <label class="form-label">Student Image</label>
-                <input  type="file" name="Image" class="form-control" accept="image/*" value="@Model?.Image" />
+                <label asp-for="Image" class="form-label">Student Image</label>
+                <input asp-for="Image" type="file" class="form-control" accept="image/*" />
+                <span asp-validation-for="Image" class="text-danger"></span>
             </div>
         </div>
 

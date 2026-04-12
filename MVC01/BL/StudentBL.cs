@@ -63,5 +63,24 @@ namespace MVC01.BL
                 return false;
             }
         }
+
+        public bool DeleteStudent(int id)
+        {
+            try
+            {
+                var existing = db.Students.Find(id);
+                if (existing != null)
+                {
+                    db.Students.Remove(existing);
+                    db.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

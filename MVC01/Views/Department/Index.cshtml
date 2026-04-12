@@ -28,6 +28,7 @@
                 <td>@student?.Students?.Count()</td>
                 <td>@student?.Instructors?.Count()</td>
                 <td>
+                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@student?.DeptId">Details</a>
                     <a class="btn btn-warning btn-sm" asp-action="EditDepartment" asp-route-id="@student?.DeptId">Edit</a>
                     <a class="btn btn-danger btn-sm" asp-action="DeleteDepartment" asp-route-id="@student?.DeptId">Delete</a>
                 </td>

@@ -8,22 +8,21 @@
     
     <h4>Are you sure you want to delete this department?</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Department ID</dt>
-        <dd class="col-sm-10">@Model.DeptId</dd>
+    <ul class="row">
+        <li class="col-sm-2">Department ID</li>
+        <span class="col-sm-10">@Model.DeptId</span>
 
-        <dt class="col-sm-2">Name</dt>
-        <dd class="col-sm-10">@Model.Name</dd>
+        <li class="col-sm-2">Name</li>
+        <span class="col-sm-10">@Model.Name</span>
 
-        <dt class="col-sm-2">Location</dt>
-        <dd class="col-sm-10">@Model.Location</dd>
+        <li class="col-sm-2">Location</li>
+        <span class="col-sm-10">@Model.Location</span>
         
-        <dt class="col-sm-2">Phone</dt>
-        <dd class="col-sm-10">@Model.PhoneNumber</dd>
-    </dl>
+        <li class="col-sm-2">Phone</li>
+        <span class="col-sm-10">@Model.PhoneNumber</span>
+    </ul>
 
-    <form method="post" asp-action="DeleteDepartment">
-        <input type="hidden" asp-for="DeptId" />
+    <form method="post" asp-action="ConfirmDeleteDepartment" asp-route-id="@Model.DeptId">
         <button type="submit" class="btn btn-danger">Confirm Delete</button>
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
     </form>

@@ -26,10 +26,12 @@ namespace MVC01.Controllers
             ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
             return View();
         }
+
         [HttpPost]
         public IActionResult AddStudent(Models.Student student, IFormFile Image)
         {
-            if (student == null || string.IsNullOrEmpty(student.Name) || string.IsNullOrEmpty(student.Email) || string.IsNullOrEmpty(student.Phone))
+           // if (student == null || string.IsNullOrEmpty(student.Name) || string.IsNullOrEmpty(student.Email) || string.IsNullOrEmpty(student.Phone))
+            if(!ModelState.IsValid)
             {
                 ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
                 return View("AddStudent", student);
@@ -74,13 +76,10 @@ namespace MVC01.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditStudent(Models.Student student, IFormFile Image)
+        public IActionResult EditStudent(int id,Models.Student student, IFormFile Image)
         {
-            if (student == null || string.IsNullOrEmpty(student.Name) || string.IsNullOrEmpty(student.Email) || string.IsNullOrEmpty(student.Phone))
-            {
-                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
-                return View(student);
-            }
+            //if (student == null || string.IsNullOrEmpty(student.Name) || string.IsNullOrEmpty(student.Email) || string.IsNullOrEmpty(student.Phone))
+            
 
             if (Image != null && Image.Length > 0)
             {
@@ -96,7 +95,13 @@ namespace MVC01.Controllers
                     Image.CopyTo(stream);
                 }
                 student.Image = fileName;
-            } 
+            }
+            student.SSn = id;
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                return View(student);
+            }
             BL.StudentBL studentBL = new BL.StudentBL();
             if (studentBL.UpdateStudent(student))
             {
@@ -104,6 +109,25 @@ namespace MVC01.Controllers
             }
             ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
             return View(student);
+
+
+        }
+
+        public IActionResult DeleteStudent(int id)
+        {
+            BL.StudentBL studentBL = new BL.StudentBL();
+            var student = studentBL.GetStudentById(id);
+            if (student == null) return NotFound();
+            return View(student);
+        }
+
+        [HttpPost, ActionName("DeleteStudent")]
+        public IActionResult ConfirmDeleteStudent(int id)
+        {
+            BL.StudentBL studentBL = new BL.StudentBL();
+            if (studentBL.DeleteStudent(id))
+                return RedirectToAction("Index");
+            return RedirectToAction("Index");
         }
     }
 }

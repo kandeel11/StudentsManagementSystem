@@ -27,7 +27,9 @@
             <td>@student.Phone</td>
             <td><img src="/Images/@student.Image" alt="Student Image" width="100" /></td>
             <td>
+                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@student.SSn">Details</a>
                 <a class="btn btn-warning btn-sm" asp-action="EditStudent" asp-route-id="@student.SSn">Edit</a>
+                <a class="btn btn-danger btn-sm" asp-action="DeleteStudent" asp-route-id="@student.SSn">Delete</a>
             </td>
         </tr>
     }

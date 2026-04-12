@@ -137,6 +137,9 @@ namespace MVC01.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
                     b.Property<int?>("DeptId")
                         .HasColumnType("int");
 
@@ -148,8 +151,9 @@ namespace MVC01.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsRequired()
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(50)
