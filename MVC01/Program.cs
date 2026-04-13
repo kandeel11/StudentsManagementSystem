@@ -1,3 +1,6 @@
+using MVC01.Middleware;
+using Serilog;
+
 namespace MVC01
 {
     public class Program
@@ -5,10 +8,20 @@ namespace MVC01
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            Log.Logger=new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.Console().WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+                .CreateBootstrapLogger();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddSession();
+            builder.Host.UseSerilog((hostingContext, configuration) =>
+            {
+                configuration.MinimumLevel.Debug()
+                    .WriteTo.Console()
+                    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day);
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -21,8 +34,10 @@ namespace MVC01
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseHandelExpection();
 
             app.UseAuthorization();
+            app.UseSession();
 
             app.MapStaticAssets();
             app.MapControllerRoute(

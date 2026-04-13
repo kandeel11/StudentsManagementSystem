@@ -158,6 +158,16 @@
                 }
                 <p class="lead mb-0 fs-6 opacity-75">Manage Your Resources Effectively</p>
             </div>
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+    <div id="rightToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                Hello, world! This is a toast on the right.
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
         </header>
 
         <!-- Main Content -->
@@ -166,12 +176,41 @@
                 @RenderBody()
             </div>
         </main>
+   
 
         <footer class="footer mt-auto">
             <p class="mb-0">&copy; @DateTime.Now.Year - Student Management System</p>
         </footer>
     </div>
+     
 
+     <script>
+       document.addEventListener("DOMContentLoaded", function() {
+    const toastElement = document.getElementById('rightToast');
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <text>
+            toastElement.querySelector('.toast-body').textContent = '@TempData["SuccessMessage"]';
+        </text>
+         <text>
+        const toast = new bootstrap.Toast(toastElement, {
+        delay: 3000 // 3 seconds
+    });
+    
+    toast.show();
+    </text>
+    }else if (TempData["ErrorMessage"] != null)
+    {
+        <text>
+            toastElement.querySelector('.toast-body').textContent = '@TempData["ErrorMessage"]';
+            toastElement.classList.remove('bg-primary');
+            toastElement.classList.add('bg-danger');
+        </text>
+    }
+    
+  
+});
+ </script>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

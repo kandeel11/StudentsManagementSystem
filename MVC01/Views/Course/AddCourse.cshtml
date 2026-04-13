@@ -7,42 +7,7 @@
     <h2 class="mb-4">Add Course</h2>
 
     <form method="post" asp-action="AddCourse">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label asp-for="Name" class="form-label">Course Name</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            
-            <div class="col-md-6 mb-3">
-                <label asp-for="Description" class="form-label">Description</label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label asp-for="Total_Degree" class="form-label">Total Degree</label>
-                <input asp-for="Total_Degree" type="number" class="form-control" />
-                <span asp-validation-for="Total_Degree" class="text-danger"></span>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <label asp-for="Min_Degree" class="form-label">Min Degree</label>
-                <input asp-for="Min_Degree" type="number" class="form-control" />
-                <span asp-validation-for="Min_Degree" class="text-danger"></span>
-            </div>
-            <div class="col-md-12 mb-3">
-                <label asp-for="Topics" class="form-label">Topics</label>
-                <input asp-for="Topics" class="form-control" />
-                <span asp-validation-for="Topics" class="text-danger"></span>
-            </div>
-        </div>
-
-        <hr class="mb-4">
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary px-4">Save</button>
-            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-        </div>
+        <partial name="_InputsPV" model="Model" />
     </form>
 </div>
 

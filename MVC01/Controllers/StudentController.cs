@@ -58,11 +58,14 @@ namespace MVC01.Controllers
             bool isAdded = studentBL.AddStudent(student);
             if (isAdded)
             {
+                TempData["SuccessMessage"] = "Student added successfully!";
                 return RedirectToAction("Index");
             }
             else
             {
+
                 ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                TempData["ErrorMessage"] = "Failed to add student. Please try again.";
                 return View(student);
             }
         }

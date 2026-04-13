@@ -36,6 +36,10 @@ namespace MVC01.Controllers
             }
             return View(course);
         }
+        public IActionResult TestError()
+        {
+            throw new Exception("Test");
+        }
         public IActionResult ValidateCourseDegree(int Total_Degree, int Min_Degree) 
         {
             if (Total_Degree <= Min_Degree)
