@@ -19,7 +19,7 @@ namespace MVC01
             builder.Host.UseSerilog((hostingContext, configuration) =>
             {
                 configuration.MinimumLevel.Debug()
-                    .WriteTo.Console()
+                    
                     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day);
             });
             var app = builder.Build();
