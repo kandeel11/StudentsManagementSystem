@@ -4,9 +4,10 @@ namespace MVC01.Context
 {
     public class MVCContext : DbContext
     {
+        //public MVCContext(): base() { }
+        public MVCContext(DbContextOptions<MVCContext> options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=.\SQLEXPRESS;database=MVCDB;Trusted_Connection=True;Encrypt=False;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

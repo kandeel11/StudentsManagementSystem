@@ -9,6 +9,7 @@
     <h2 class="mb-4">Edit Student</h2>
 
     <form method="post" asp-action="EditStudent" enctype="multipart/form-data" asp-route-id="@Model.SSn">
+        <input type="hidden" asp-for="SSn" value="@Model.SSn" />
         <partial name="_InputsPV" model="Model" />
     </form>
 </div>

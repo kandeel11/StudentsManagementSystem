@@ -1,18 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
+using MVC01.Repositry;
 
 namespace MVC01.Controllers
 {
     public class CourseController : Controller
     {
+        ICourseRepositry courseBL;
+        public CourseController(ICourseRepositry _courseBL)
+        {
+            courseBL = _courseBL;
+        }
         public IActionResult Index()
         {
-            var courses =BL.CourseBL.GetAllCourses();
+                var courses = courseBL.GetAll();
             return View(courses);
         }
 
         public IActionResult Details(int id)
         {
-            var course = BL.CourseBL.GetCourseById(id);
+            var course = courseBL.GetById(id);
             if (course == null) return NotFound();
             return View(course);
         }
@@ -30,8 +36,10 @@ namespace MVC01.Controllers
                 return View(course);
             }
 
-            if (BL.CourseBL.AddCourse(course))
+            if (courseBL.Add(course))
             {
+
+                courseBL.Save();
                 return RedirectToAction("Index");
             }
             return View(course);
@@ -51,7 +59,7 @@ namespace MVC01.Controllers
 
         public IActionResult EditCourse(int id)
         {
-            var course = BL.CourseBL.GetCourseById(id);
+            var course = courseBL.GetById(id);
             if (course == null) return NotFound();
             return View(course);
         }
@@ -65,8 +73,9 @@ namespace MVC01.Controllers
                 return View(course);
             }
             course.Crs_Id = id; 
-            if (BL.CourseBL.UpdateCourse(course))
+            if (courseBL.Update(course))
             {
+                courseBL.Save();
                 return RedirectToAction("Index");
             }
             return View(course);
@@ -74,7 +83,7 @@ namespace MVC01.Controllers
 
         public IActionResult DeleteCourse(int id)
         {
-            var course = BL.CourseBL.GetCourseById(id);
+            var course = courseBL.GetById(id);
             if (course == null) return NotFound();
             return View(course);
         }
@@ -82,8 +91,9 @@ namespace MVC01.Controllers
         [HttpPost]
         public IActionResult ConfirmDeleteCourse(int id)
         {
-            if (BL.CourseBL.DeleteCourse(id))
+            if (courseBL.Delete(id))
             {
+                courseBL.Save();
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");

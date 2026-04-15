@@ -1,18 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MVC01.Repositry;
 
 namespace MVC01.Controllers
 {
     public class DepartmentController : Controller
     {
+        IDepartmentRepositry departmentBL;
+        public DepartmentController(IDepartmentRepositry _departmentBL)
+        {
+            departmentBL = _departmentBL;
+        }
         public IActionResult Index()
         {
-            var departments = BL.DepartmentBL.GetAllDepartments();
+            var departments = departmentBL.GetAll();
             return View(departments);
         }
 
         public IActionResult Details(int id)
         {
-            var dept = BL.DepartmentBL.GetDepartmentById(id);
+            var dept = departmentBL.GetById(id);
             if (dept == null) return NotFound();
             return View(dept);
         }
@@ -24,15 +30,19 @@ namespace MVC01.Controllers
         [HttpPost]
         public IActionResult AddDepartment(Models.Department department)
         {
-            if(department == null || department.Name == null && department.Location== null || department.PhoneNumber == null)return View(department);
-            if ( BL.DepartmentBL.AddDepartment(department))
+            if (department == null || department.Name == null && department.Location == null || department.PhoneNumber == null) return View(department);
+            if (departmentBL.Add(department))
+            {
+                departmentBL.Save();
                 return RedirectToAction("Index");
+
+            }
             return View(department);
         }
 
         public IActionResult EditDepartment(int id)
         {
-            var dept = BL.DepartmentBL.GetDepartmentById(id);
+            var dept = departmentBL.GetById(id);
             if (dept == null) return NotFound();
             return View(dept);
         }
@@ -42,14 +52,17 @@ namespace MVC01.Controllers
         {
             if (department == null || string.IsNullOrEmpty(department.Name)) return View(department);
             department.DeptId = id;
-            if (BL.DepartmentBL.UpdateDepartment(department))
+            if (departmentBL.Update(department))
+            {
+                departmentBL.Save();
                 return RedirectToAction("Index");
+            }
             return View(department);
         }
 
         public IActionResult DeleteDepartment(int id)
         {
-            var dept = BL.DepartmentBL.GetDepartmentById(id);
+            var dept = departmentBL.GetById(id);
             if (dept == null) return NotFound();
             return View(dept);
         }
@@ -57,9 +70,12 @@ namespace MVC01.Controllers
         [HttpPost]
         public IActionResult ConfirmDeleteDepartment(int id)
         {
-            if (BL.DepartmentBL.DeleteDepartment(id))
+            if (departmentBL.Delete(id))
+            {
+                departmentBL.Save();
                 return RedirectToAction("Index");
-            return RedirectToAction("Index"); 
+            }
+            return RedirectToAction("Index");
         }
     }
 }

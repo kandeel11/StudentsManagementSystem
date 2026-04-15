@@ -1,32 +1,39 @@
 ﻿using Mapster;
+using MVC01.Context;
+using MVC01.Models;
+using MVC01.Repositry;
 using MVC01.ViewModels;
 
 namespace MVC01.BL
 {
-    public class StudentBL
+    public class StudentRepositry: IStudentRepositry
     {
-        Context.MVCContext db = new Context.MVCContext();
-        public List<Models.Student> GetAllStudents()
+        Context.MVCContext db;
+        public StudentRepositry(MVCContext _db)
+        {
+            db = _db;
+        }
+        public List<Student> GetAll()
         {
             return db.Students.ToList();
         }
-        public Models.Student GetStudentById(int id)
+        public Student GetById(int id)
         {
             return db.Students.Find(id);
         }
 
-        public bool AddStudent(Models.Student student)
+        public bool Add(Student student)
         {
             db.Students.Add(student);
-            try
-            {
-                db.SaveChanges();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
+            return true;
+        }
+        public StudentCourseEnrollmentVM studentCourseEnrollmentVM(int id)
+        {
+            var studentCourseEnrollment = db.Students
+                .Where(s => s.SSn == id)
+                .ProjectToType<StudentCourseEnrollmentVM>()
+                .FirstOrDefault();
+            return studentCourseEnrollment;
         }
         public StudentDetailsVM studentDetailsVM(int id)
         {
@@ -37,7 +44,7 @@ namespace MVC01.BL
             return studentDetails;
         }
 
-        public bool UpdateStudent(Models.Student student)
+        public bool Update(Student student)
         {
             try
             {
@@ -53,7 +60,6 @@ namespace MVC01.BL
                     {
                         existing.Image = student.Image;
                     }
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -64,7 +70,7 @@ namespace MVC01.BL
             }
         }
 
-        public bool DeleteStudent(int id)
+        public bool Delete(int id)
         {
             try
             {
@@ -72,7 +78,6 @@ namespace MVC01.BL
                 if (existing != null)
                 {
                     db.Students.Remove(existing);
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -81,6 +86,11 @@ namespace MVC01.BL
             {
                 return false;
             }
+        }
+
+        public void Save()
+        {
+            db.SaveChanges();
         }
     }
 }

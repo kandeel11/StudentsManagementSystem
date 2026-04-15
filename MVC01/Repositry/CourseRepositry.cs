@@ -1,23 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using MVC01.Models;
+using MVC01.Repositry;
 
 namespace MVC01.BL
 {
-    public class CourseBL
+    public class CourseRepositry:ICourseRepositry
     {
-        static Context.MVCContext db = new Context.MVCContext();
+        Context.MVCContext db;
+        public CourseRepositry(Context.MVCContext _db)
+        {
+            db = _db;
+        }
 
-        public static List<Course> GetAllCourses()
+        public  List<Course> GetAll()
         {
             return db.Courses.ToList();
         }
 
-        public static bool AddCourse(Course course)
+        public  bool Add(Course course)
         {
             try
             {
                 db.Courses.Add(course);
-                db.SaveChanges();
                 return true;
             }
             catch (Exception)
@@ -26,7 +30,7 @@ namespace MVC01.BL
             }
         }
 
-        public static Course GetCourseById(int id)
+        public  Course GetCourseById(int id)
         {
             return db.Courses
                 .Include(c => c.Student_Crs)
@@ -34,7 +38,7 @@ namespace MVC01.BL
                 .FirstOrDefault(c => c.Crs_Id == id);
         }
 
-        public static bool UpdateCourse(Course course)
+        public  bool Update(Course course)
         {
             try
             {
@@ -45,7 +49,6 @@ namespace MVC01.BL
                     existing.Description = course.Description;
                     existing.Total_Degree = course.Total_Degree;
                     existing.Min_Degree = course.Min_Degree;
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -56,7 +59,7 @@ namespace MVC01.BL
             }
         }
 
-        public static bool DeleteCourse(int id)
+        public  bool Delete(int id)
         {
             try
             {
@@ -64,7 +67,6 @@ namespace MVC01.BL
                 if (existing != null)
                 {
                     db.Courses.Remove(existing);
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -73,6 +75,20 @@ namespace MVC01.BL
             {
                 return false;
             }
+        }
+
+        public  void Save()
+        {
+            db.SaveChanges();
+        }
+
+        public Course GetById(int id)
+        {
+            return db.Courses
+                .Include(c => c.Student_Crs)
+                .ThenInclude(sc => sc.Student)
+                .FirstOrDefault(c => c.Crs_Id == id);
+
         }
     }
 }

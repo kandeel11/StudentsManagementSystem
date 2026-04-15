@@ -1,25 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MVC01.Repositry;
 
 namespace MVC01.Controllers
 {
     public class InstructorController : Controller
     {
+        IInstructorRepositry instructorBL;
+        IDepartmentRepositry departmentBL;
+
+        public InstructorController(IInstructorRepositry _instructorBL, IDepartmentRepositry _departmentBL)
+        {
+            instructorBL = _instructorBL;
+            departmentBL = _departmentBL;
+        }
         public IActionResult Index()
         {
-            var instructors = BL.InstructorBL.GetAllInstructors();
+            var instructors = instructorBL.GetAll();
             return View(instructors);
         }
 
         public IActionResult Details(int id)
         {
-            var instructor = BL.InstructorBL.GetInstructorById(id);
+            var instructor = instructorBL.GetById(id);
             if (instructor == null) return NotFound();
             return View(instructor);
         }
 
         public IActionResult AddInstructor()
         {
-            ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+            ViewBag.Departments =departmentBL.GetAll();
             return View();
         }
 
@@ -28,19 +37,20 @@ namespace MVC01.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                ViewBag.Departments = departmentBL.GetAll();
                 return View(instructor);
             }
-            BL.InstructorBL.AddInstructor(instructor);
+            instructorBL.Add(instructor);
+            instructorBL.Save();
 
             return RedirectToAction("Index");
         }
 
         public IActionResult Edit(int id)
         {
-            var instructor = BL.InstructorBL.GetInstructorById(id);
+            var instructor = instructorBL.GetById(id);
             if (instructor == null) return NotFound();
-            ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+            ViewBag.Departments = departmentBL.GetAll();
             return View(instructor);
         }
 
@@ -49,17 +59,18 @@ namespace MVC01.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                ViewBag.Departments = departmentBL.GetAll();
                 return View(instructor);
             }
             instructor.Ins_Id = id;
-            BL.InstructorBL.UpdateInstructor(instructor);
+            instructorBL.Update(instructor);
+            instructorBL.Save();
             return RedirectToAction("Index");
         }
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var instructor = BL.InstructorBL.GetInstructorById(id);
+            var instructor = instructorBL.GetById(id);
             if (instructor == null) return NotFound();
             return View(instructor);
         }
@@ -67,9 +78,10 @@ namespace MVC01.Controllers
         [HttpPost]
         public IActionResult ConfirmDelete(int id)
         {
-            var instructor = BL.InstructorBL.GetInstructorById(id);
+            var instructor =instructorBL.GetById(id);
             if (instructor == null) return NotFound();
-            BL.InstructorBL.DeleteInstructor(id);
+            instructorBL.Delete(id);
+            instructorBL.Save();
             return RedirectToAction("Index");
         }
 

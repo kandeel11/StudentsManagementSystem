@@ -1,21 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MVC01.Context;
+using MVC01.Models;
+using MVC01.Repositry;
 
 namespace MVC01.BL
 {
-    public class DepartmentBL
+    public class DepartmentRepositry : IDepartmentRepositry
     {
-        static Context.MVCContext db = new Context.MVCContext();
-        public static List<Models.Department> GetAllDepartments()
+        Context.MVCContext db;
+        public DepartmentRepositry(MVCContext _db)
+        {
+            db = _db;
+        }
+        public List<Models.Department> GetAll()
         {
             return db.Departments.Include(s => s.Students).Include(s => s.Instructors).ToList();
-
         }
-        public static bool AddDepartment(Models.Department department)
+        public bool Add(Models.Department department)
         {
             try
             {
                 db.Departments.Add(department);
-                db.SaveChanges();
                 return true;
             }
             catch (Exception ex)
@@ -24,7 +29,7 @@ namespace MVC01.BL
             }
         }
 
-        public static Models.Department GetDepartmentById(int id)
+        public Models.Department GetById(int id)
         {
             return db.Departments
                 .Include(d => d.Students)
@@ -32,7 +37,7 @@ namespace MVC01.BL
                 .FirstOrDefault(d => d.DeptId == id);
         }
 
-        public static bool UpdateDepartment(Models.Department department)
+        public bool Update(Models.Department department)
         {
             try
             {
@@ -42,7 +47,6 @@ namespace MVC01.BL
                     existing.Name = department.Name;
                     existing.Location = department.Location;
                     existing.PhoneNumber = department.PhoneNumber;
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -53,7 +57,7 @@ namespace MVC01.BL
             }
         }
 
-        public static bool DeleteDepartment(int id)
+        public bool Delete(int id)
         {
             try
             {
@@ -61,7 +65,6 @@ namespace MVC01.BL
                 if (dept != null)
                 {
                     db.Departments.Remove(dept);
-                    db.SaveChanges();
                     return true;
                 }
                 return false;
@@ -70,6 +73,10 @@ namespace MVC01.BL
             {
                 return false;
             }
+        }
+        public void Save()
+        {
+            throw new NotImplementedException();
         }
     }
 }

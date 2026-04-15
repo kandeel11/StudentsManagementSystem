@@ -1,4 +1,9 @@
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using MVC01.BL;
+using MVC01.Context;
 using MVC01.Middleware;
+using MVC01.Repositry;
 using Serilog;
 
 namespace MVC01
@@ -16,13 +21,21 @@ namespace MVC01
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddSession();
+            builder.Services.AddDbContext<MVCContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("cs")));
+            
             builder.Host.UseSerilog((hostingContext, configuration) =>
             {
                 configuration.MinimumLevel.Debug()
                     
                     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day);
             });
+            builder.Services.AddScoped<IStudentRepositry, StudentRepositry>();
+            builder.Services.AddScoped<IDepartmentRepositry, DepartmentRepositry>();
+            builder.Services.AddScoped<ICourseRepositry, CourseRepositry>();
+            builder.Services.AddScoped<IInstructorRepositry, InstructorRepositry>();
             var app = builder.Build();
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -34,7 +47,7 @@ namespace MVC01
 
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseHandelExpection();
+            //app.UseHandelExpection();
 
             app.UseAuthorization();
             app.UseSession();

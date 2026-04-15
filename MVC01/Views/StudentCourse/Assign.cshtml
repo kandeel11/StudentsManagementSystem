@@ -1,0 +1,34 @@
+﻿@model MVC01.ViewModels.StudentCourseEnrollmentVM
+
+<form asp-action="Assign" method="post">
+    <input type="hidden" asp-for="Student_Id" />
+    
+    <h3>Assign Courses for: @Model.Student_Name</h3>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Course Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Courses.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <input type="hidden" asp-for="Courses[i].courseId" />
+                        <input type="checkbox" asp-for="Courses[i].IsSelected" class="form-check-input" />
+                    </td>
+                    <td>@Model.Courses[i].Name</td>
+                    <td>
+                        <input type="number" asp-for="Courses[i].Degree" class="form-control" min="0" max="100" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

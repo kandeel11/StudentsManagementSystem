@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MVC01.Context;
 using System.ComponentModel.DataAnnotations;
 
 namespace MVC01.Validation
@@ -9,8 +10,7 @@ namespace MVC01.Validation
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             if (value == null) return ValidationResult.Success;
-            //var db = (DbContext)validationContext.GetService(typeof(DbContext))!;
-            var db = new Context.MVCContext();
+            var db = validationContext.GetService<MVCContext>();
             var entityType = validationContext.ObjectType;
             var propertyName = validationContext.MemberName;
 

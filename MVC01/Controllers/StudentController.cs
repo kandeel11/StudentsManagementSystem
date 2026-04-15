@@ -1,19 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MVC01.BL;
+using MVC01.Repositry;
 using System.Text;
 
 namespace MVC01.Controllers
 {
     public class StudentController : Controller
     {
+        IStudentRepositry studentBL;
+        IDepartmentRepositry departmentBL;
+        ICourseRepositry courseBL;
+        public StudentController(IStudentRepositry _studentBL,IDepartmentRepositry _departmentBL, ICourseRepositry _courseBL)
+        {
+            studentBL = _studentBL;
+            departmentBL = _departmentBL;
+            courseBL = _courseBL;
+        }
         public IActionResult Index()
         {
-            BL.StudentBL studentBL = new BL.StudentBL();
-            var students = studentBL.GetAllStudents();
+            var students = studentBL.GetAll();
             return View(students);
         }
         public IActionResult Details(int id)
         {
-            BL.StudentBL studentBL = new BL.StudentBL();
             var student = studentBL.studentDetailsVM(id);
             if (student == null) { return NotFound(); }
             else
@@ -23,7 +32,7 @@ namespace MVC01.Controllers
         }
         public IActionResult AddStudent()
         {
-            ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+            ViewBag.Departments = departmentBL.GetAll();
             return View();
         }
 
@@ -33,7 +42,7 @@ namespace MVC01.Controllers
            // if (student == null || string.IsNullOrEmpty(student.Name) || string.IsNullOrEmpty(student.Email) || string.IsNullOrEmpty(student.Phone))
             if(!ModelState.IsValid)
             {
-                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                ViewBag.Departments = departmentBL.GetAll();
                 return View("AddStudent", student);
             }
             if (Image != null && Image.Length > 0)
@@ -54,27 +63,26 @@ namespace MVC01.Controllers
                 }
                 student.Image = fileName;
             }
-            BL.StudentBL studentBL = new BL.StudentBL();
-            bool isAdded = studentBL.AddStudent(student);
+            bool isAdded = studentBL.Add(student);
             if (isAdded)
             {
                 TempData["SuccessMessage"] = "Student added successfully!";
+                studentBL.Save();
                 return RedirectToAction("Index");
             }
             else
             {
 
-                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                ViewBag.Departments =departmentBL.GetAll();
                 TempData["ErrorMessage"] = "Failed to add student. Please try again.";
                 return View(student);
             }
         }
         public IActionResult EditStudent(int id) 
         {
-            BL.StudentBL studentBL = new BL.StudentBL();
-            var student = studentBL.GetStudentById(id);
+            var student = studentBL.GetById(id);
             if (student == null) return NotFound();
-            ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+            ViewBag.Departments = departmentBL.GetAll();
             return View(student);
         }
 
@@ -100,17 +108,18 @@ namespace MVC01.Controllers
                 student.Image = fileName;
             }
             student.SSn = id;
+            ModelState.Remove("Image");
             if (!ModelState.IsValid)
             {
-                ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+                ViewBag.Departments = departmentBL.GetAll();
                 return View(student);
             }
-            BL.StudentBL studentBL = new BL.StudentBL();
-            if (studentBL.UpdateStudent(student))
+            if (studentBL.Update(student))
             {
+                studentBL.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.Departments = BL.DepartmentBL.GetAllDepartments();
+            ViewBag.Departments = departmentBL.GetAll();
             return View(student);
 
 
@@ -118,8 +127,7 @@ namespace MVC01.Controllers
 
         public IActionResult DeleteStudent(int id)
         {
-            BL.StudentBL studentBL = new BL.StudentBL();
-            var student = studentBL.GetStudentById(id);
+            var student = studentBL.GetById(id);
             if (student == null) return NotFound();
             return View(student);
         }
@@ -127,10 +135,12 @@ namespace MVC01.Controllers
         [HttpPost, ActionName("DeleteStudent")]
         public IActionResult ConfirmDeleteStudent(int id)
         {
-            BL.StudentBL studentBL = new BL.StudentBL();
-            if (studentBL.DeleteStudent(id))
+            if (studentBL.Delete(id))
+            {
+                studentBL.Save();
                 return RedirectToAction("Index");
-            return RedirectToAction("Index");
+            }
+            return View(studentBL.GetById(id));
         }
     }
 }
