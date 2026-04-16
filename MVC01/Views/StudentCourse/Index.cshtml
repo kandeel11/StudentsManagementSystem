@@ -16,35 +16,46 @@
             <div class="row mb-4">
                 <div class="col-md-5">
                     <label class="form-label fw-bold">Select Student</label>
-                    <select id="studentSelect" class="form-select border-primary">
-                        <option value="">-- Select a Student --</option>
-                         @foreach (var student in ViewBag?.Students)
-                        {
-                            <option value="@student.SSn">@student.Name</option>
-                        } 
+                    <select id="studentSelect" class="form-select border-primary" asp-items=@(new SelectList(ViewBag.Students, "SSn", "Name", Model?.Student_Id))>
+                        <option value="" disabled selected>-- Select a student --</option>
                     </select>
                 </div>
             </div>
-
             <div class="table-responsive">
                 <table class="table table-bordered table-hover align-middle">
                     <thead class="table-light">
                         <tr>
                             <th style="width: 40%">Course Name</th>
                             <th style="width: 30%">Grade</th>
-                            <th style="width: 30%">Actions</th>
+                            <th style="width: 30%">MinDegree</th>
                         </tr>
                     </thead>
                     <tbody id="enrolledCoursesBody">
-                        @foreach(var item in Model.Courses){
+                        @if (Model?.Courses == null || !Model.Courses.Any())
+                        {
                             <tr>
-
-                            <td>
-                                @item.Name
-                            </td>
-                            <td>@item.Degree</td>
-                            <td>@item.MinDegree</td>
+                                <td colspan="3" class="text-center text-muted">No courses enrolled for this student.</td>
                             </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in Model?.Courses)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Name
+                                    </td>
+                                    @if (item.Degree <= item.MinDegree)
+                                    {
+                                        <td class="text-danger fw-bold">@item.Degree</td>
+                                        <td >@item.MinDegree</td>
+                                    }else
+                                    {
+                                    <td>@item.Degree</td>
+                                     <td>@item.MinDegree</td>
+                                    }
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -75,89 +86,24 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Event listener for student dropdown change
+           let ID = window.location.href.split("/")[5]
+           if(ID){
+                $('#studentSelect').val(ID);
+           }
             $('#studentSelect').on('change', function () {
                 const studentId = $(this).val();
                 if (studentId) {
-                    $('#btnAddNew').prop('disabled', false);
-                    loadEnrolledCourses(studentId);
+                   
+                    window.location.href = `/StudentCourse/Index/${studentId}`;
+                
                 } else {
-                    $('#btnAddNew').prop('disabled', true);
                     $('#enrolledCoursesBody').html('<tr><td colspan="3" class="text-center text-muted">Please select a student.</td></tr>');
                 }
             });
-
-            // Load available courses when modal is shown
-            $('#assignModal').on('show.bs.modal', function () {
-                const studentId = $('#studentSelect').val();
-                fetchAvailableCourses(studentId);
-            });
         });
 
-        function loadEnrolledCourses(studentId) {
-            $.get(`/StudentCourse/GetEnrolledCourses/${studentId}`, function (data) {
-                let rows = '';
-                if (data.length === 0) {
-                    rows = '<tr><td colspan="3" class="text-center">No courses enrolled yet.</td></tr>';
-                } else {
-                    data.forEach(item => {
-                        rows += `
-                            <tr>
-                                <td>${item.courseName}</td>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm grade-input"
-                                           value="${item.grade || 0}" min="0" max="100">
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary btn-sm" onclick="updateGrade(${studentId}, ${item.courseId}, this)">
-                                        <i class="fas fa-save"></i> Save Grade
-                                    </button>
-                                </td>
-                            </tr>`;
-                    });
-                }
-                $('#enrolledCoursesBody').html(rows);
-            });
-        }
+        
+        
 
-        function fetchAvailableCourses(studentId) {
-            $.get(`/StudentCourse/GetAvailableCourses/${studentId}`, function (data) {
-                let items = '';
-                if (data.length === 0) {
-                    items = '<p class="text-center">All available courses are already assigned.</p>';
-                } else {
-                    data.forEach(course => {
-                        items += `
-                            <label class="list-group-item">
-                                <input class="form-check-input me-1 course-checkbox" type="checkbox" value="${course.crs_Id}">
-                                ${course.name}
-                            </label>`;
-                    });
-                }
-                $('#availableCoursesList').html(items);
-            });
-        }
-
-        function saveAssignments() {
-            const studentId = $('#studentSelect').val();
-            const selectedIds = [];
-            $('.course-checkbox:checked').each(function () {
-                selectedIds.push($(this).val());
-            });
-
-            if (selectedIds.length === 0) return alert("Select at least one course.");
-
-            $.post('/StudentCourse/AssignCourses', { studentId: studentId, courseIds: selectedIds }, function () {
-                $('#assignModal').modal('hide');
-                loadEnrolledCourses(studentId);
-            });
-        }
-
-        function updateGrade(studentId, courseId, button) {
-            const grade = $(button).closest('tr').find('.grade-input').val();
-            $.post('/StudentCourse/UpdateGrade', { studentId, courseId, grade }, function () {
-                alert("Grade updated successfully!");
-            });
-        }
     </script>
 }

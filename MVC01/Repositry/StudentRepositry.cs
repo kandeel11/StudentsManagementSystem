@@ -27,8 +27,9 @@ namespace MVC01.BL
             db.Students.Add(student);
             return true;
         }
-        public StudentCourseEnrollmentVM studentCourseEnrollmentVM(int id)
+        public StudentCourseEnrollmentVM studentCourseEnrollmentVM(int? id)
         {
+            if (id == null) return null;
             var studentCourseEnrollment = db.Students
                 .Where(s => s.SSn == id)
                 .ProjectToType<StudentCourseEnrollmentVM>()

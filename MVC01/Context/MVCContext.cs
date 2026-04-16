@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using MVC01.Models;
 
 namespace MVC01.Context
 {
-    public class MVCContext : DbContext
+    public class MVCContext : IdentityDbContext<ApplicationUser>
     {
         //public MVCContext(): base() { }
         public MVCContext(DbContextOptions<MVCContext> options) : base(options) { }

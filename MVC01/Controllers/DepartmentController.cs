@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MVC01.Repositry;
 
 namespace MVC01.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         IDepartmentRepositry departmentBL;
@@ -10,6 +12,7 @@ namespace MVC01.Controllers
         {
             departmentBL = _departmentBL;
         }
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var departments = departmentBL.GetAll();

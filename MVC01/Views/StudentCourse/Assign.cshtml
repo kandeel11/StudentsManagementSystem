@@ -3,7 +3,7 @@
 <form asp-action="Assign" method="post">
     <input type="hidden" asp-for="Student_Id" />
     
-    <h3>Assign Courses for: @Model.Student_Name</h3>
+    <h3>Assign Courses for: @Model?.Student_Name</h3>
 
     <table class="table table-striped">
         <thead>
@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < Model.Courses.Count; i++)
+            @for (int i = 0; i < Model?.Courses?.Count; i++)
             {
                 <tr>
                     <td>
