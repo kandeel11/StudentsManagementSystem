@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MVC01.Models;
 using MVC01.ViewModels;
+using System.Security.Claims;
 
 namespace MVC01.Controllers
 {
@@ -25,8 +26,24 @@ namespace MVC01.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterUserVM model)
+        public async Task<IActionResult> Register(RegisterUserVM model, IFormFile ImageUrl)
         {
+            if(ImageUrl != null && ImageUrl.Length > 0)
+            {
+                string imageFileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageUrl.FileName);
+                using (var memoryStream = new MemoryStream())
+                {
+                    await ImageUrl.CopyToAsync(memoryStream);
+                    string imagePath = Path.Combine("wwwroot/images", imageFileName);
+                    using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        memoryStream.Seek(0, SeekOrigin.Begin);
+                        await memoryStream.CopyToAsync(fileStream);
+                    }
+                    model.ImageUrl = "/images/" + imageFileName; // Store the relative path to the image
+                    
+                }
+            }
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -34,23 +51,27 @@ namespace MVC01.Controllers
                     UserName = model.UserName,
                     Email = model.Email,
                     PhoneNumber = model.Phone,
-                    Address = model.Address
+                    Address = model.Address,
+                    ImageUrl=model.ImageUrl
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    List<Claim> claims = new List<Claim>
+                    {
+                        new Claim("Image", user.ImageUrl ?? ""),
+                        new Claim("Address", user.Address ?? "")
+                    };
+                    await _signInManager.SignInWithClaimsAsync(user, isPersistent: false, claims);
                     return RedirectToAction("Index", "Home");
                 }
-
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
             return View(model);
         }
 
