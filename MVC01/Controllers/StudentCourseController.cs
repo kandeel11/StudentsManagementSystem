@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC01.BL;
 using MVC01.Models;
@@ -7,6 +8,8 @@ using MVC01.ViewModels;
 
 namespace MVC01.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class StudentCourseController : Controller
     {
         private readonly IRepositry<StudentCourseEnrollmentVM> _repository;
@@ -35,34 +38,40 @@ namespace MVC01.Controllers
         [HttpGet]
         public IActionResult Assign(int id) // Student ID
         {
+            var student = studentRepositry.GetById(id);
+            if (student == null) return NotFound();
 
+            var mappedCourses = _repository.GetById(id)?.Courses ?? new List<CourseVM>();
+            var allCourses = courseRepositry.GetAll();
 
-            return View();
+            var model = new StudentCourseEnrollmentVM
+            {
+                Student_Id = student.SSn,
+                Student_Name = student.Name,
+                Courses = allCourses.Select(c => new CourseVM
+                {
+                    courseId = c.Crs_Id,
+                    Name = c.Name,
+                    TotalDegree = c.Total_Degree,
+                    MinDegree = c.Min_Degree,
+                    IsSelected = mappedCourses.Any(mc => mc.courseId == c.Crs_Id),
+                    Degree = mappedCourses.FirstOrDefault(mc => mc.courseId == c.Crs_Id)?.Degree ?? 0
+                }).ToList()
+            };
+
+            return View(model);
         }
 
-        //public IActionResult Assign(StudentCourseEnrollmentVM model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // 1. Remove old enrollments for this student
-        //        var oldEntries = _context.Student_Crs.Where(sc => sc.StudentId == model.Student_Id);
-        //        _context.Student_Crs.RemoveRange(oldEntries);
-
-        //        // 2. Add only selected courses
-        //        foreach (var item in model.Courses.Where(c => c.IsSelected))
-        //        {
-        //            _context.Student_Crs.Add(new Student_Crs
-        //            {
-        //                StudentId = model.Student_Id,
-        //                CourseId = item.courseId,
-        //                Grade = item.Degree
-        //            });
-        //        }
-
-        //        _context.SaveChanges();
-        //        return RedirectToAction("Index", "Student");
-        //    }
-        //    return View(model);
-        //}
+        [HttpPost]
+        public IActionResult Assign(StudentCourseEnrollmentVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                _repository.Update(model);
+                _repository.Save();
+                return RedirectToAction("Index", "Student");
+            }
+            return View(model);
+        }
     }
 }

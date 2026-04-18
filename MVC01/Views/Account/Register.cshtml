@@ -52,8 +52,17 @@
             </div>
 
             <hr />
+            <div class="row mt-3">
+                <div>
+                   
+                        <h5 class="font-weight-bold">Select Roles:</h5>
+                        <select class="form-select mb-2" asp-for="Role" asp-items="@(new SelectList(ViewBag.Roles, "Name", "Name"))">
+                        <option value="" disabled>-- Select Role --</option>
+                        </select>
+                    
+                </div>
+            </div>
 
-            @* حقل الصورة وزر الإرسال *@
             <div class="row mt-3">
                 <div class="col-md-6">
                     <div class="form-group mb-3">
@@ -73,7 +82,7 @@
 </div>
 
 <div class="mt-3">
-    <a asp-controller="Student" asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to List</a>
 </div>
 
 @section Scripts {

@@ -1,10 +1,13 @@
 ﻿<div class="container ">
-<a class="btn btn-info " asp-action="AddStudent">Add Student</a>
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <a class="btn btn-info " asp-action="AddStudent">Add Student</a>
+}
 @section Header{
     <h1>Students Management</h1>
     }
 
-   
+
 <table class="table table-striped">
     <tr>
         <th>SSn</th>
@@ -13,7 +16,10 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Image</th>
-        <th>Actions</th>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <th>Actions</th>
+        }
     </tr>
     @foreach (var student in Model)
     {
@@ -24,11 +30,14 @@
             <td>@student.Email</td>
             <td>@student.Phone</td>
             <td><img src="/Images/@student.Image" alt="Student Image" width="100" /></td>
-            <td>
-                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@student.SSn">Details</a>
-                <a class="btn btn-warning btn-sm" asp-action="EditStudent" asp-route-id="@student.SSn">Edit</a>
-                <a class="btn btn-danger btn-sm" asp-action="DeleteStudent" asp-route-id="@student.SSn">Delete</a>
-            </td>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <td>
+                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@student.SSn">Details</a>
+                    <a class="btn btn-warning btn-sm" asp-action="EditStudent" asp-route-id="@student.SSn">Edit</a>
+                    <a class="btn btn-danger btn-sm" asp-action="DeleteStudent" asp-route-id="@student.SSn">Delete</a>
+                </td>
+            }
         </tr>
     }
 </table>

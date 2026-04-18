@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using MVC01.BL;
 using MVC01.Models;
 using MVC01.ViewModels;
@@ -42,7 +43,9 @@ namespace MVC01.Repositry
                         courseId = sc.CourseId,
                         Name = sc.Course.Name,
                         IsSelected = true, 
-                        Degree = sc.Grade
+                        Degree = sc.Grade,
+                        MinDegree = sc.Course.Min_Degree,
+                        TotalDegree = sc.Course.Total_Degree
                     }).ToList()
                 }).ToList();
             return studentCourseEnrollments;
@@ -50,8 +53,23 @@ namespace MVC01.Repositry
 
         public StudentCourseEnrollmentVM GetById(int id)
         {
-            var studentCourseEnrollment=db.Students.Where(s=>s.SSn==id).ProjectToType<StudentCourseEnrollmentVM>().FirstOrDefault();
-            
+            var studentCourseEnrollment = db.Students
+                .Where(s => s.SSn == id)
+                .Select(s => new StudentCourseEnrollmentVM
+                {
+                    Student_Id = s.SSn,
+                    Student_Name = s.Name,
+                    Courses = s.Student_Crs.Select(sc => new CourseVM
+                    {
+                        courseId = sc.CourseId,
+                        Name = sc.Course.Name,
+                        Degree = sc.Grade,
+                        MinDegree = sc.Course.Min_Degree,
+                        TotalDegree = sc.Course.Total_Degree,
+                        IsSelected = true
+                    }).ToList()
+                }).FirstOrDefault();
+
             return studentCourseEnrollment;
         }
 
@@ -66,8 +84,7 @@ namespace MVC01.Repositry
             if (existing != null)
             {
                 existing.Name = entity.Student_Name;
-                // Update other student properties if needed
-                // Update course enrollments
+                
                 var existingEnrollments = db.Student_Crs.Where(sc => sc.StudentId == entity.Student_Id).ToList();
                 db.Student_Crs.RemoveRange(existingEnrollments);
                 foreach (var course in entity.Courses.Where(c => c.IsSelected))

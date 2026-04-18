@@ -8,9 +8,18 @@
     <div class="card shadow-lg border-0">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-book-reader me-2"></i> Student Enrollment Management</h5>
-            <button id="btnAddNew" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#assignModal" disabled>
-                <i class="fas fa-plus-circle"></i> Assign New Course
-            </button>
+            @if (Model != null && Model.Student_Id > 0)
+            {
+                <a id="btnAddNew" class="btn btn-success btn-sm" asp-controller="StudentCourse" asp-action="Assign" asp-route-id="@Model.Student_Id">
+                    <i class="fas fa-plus-circle"></i> Assign New Course
+                </a>
+            }
+            else
+            {
+                <button id="btnAddNew" class="btn btn-success btn-sm" disabled>
+                    <i class="fas fa-plus-circle"></i> Assign New Course
+                </button>
+            }
         </div>
         <div class="card-body">
             <div class="row mb-4">

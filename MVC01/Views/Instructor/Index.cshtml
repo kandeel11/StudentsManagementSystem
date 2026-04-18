@@ -6,8 +6,11 @@
 
 <div class="container mt-4">
     <h2>Instructors</h2>
-    <a class="btn btn-info mb-3" asp-action="AddInstructor">Add Instructor</a>
-    
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn btn-info mb-3" asp-action="AddInstructor">Add Instructor</a>
+    }
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -17,7 +20,10 @@
                 <th>Address</th>
                 <th>Email</th>
                 <th>Salary</th>
-                <th>Actions</th>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -32,11 +38,14 @@
                         <td>@instructor.Address</td>
                         <td>@instructor.Email</td>
                         <td>@instructor.salary</td>
-                        <td>
-                            <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@instructor.Ins_Id">Details</a>
-                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@instructor.Ins_Id">Edit</a>
-                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@instructor.Ins_Id">Delete</a>
-                        </td>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <td>
+                                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@instructor.Ins_Id">Details</a>
+                                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@instructor.Ins_Id">Edit</a>
+                                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@instructor.Ins_Id">Delete</a>
+                            </td>
+                        }
                     </tr>
                 }
             }

@@ -5,8 +5,11 @@
 
 <div class="container mt-4">
     <h2>Courses</h2>
-    <a class="btn btn-info mb-3" asp-action="AddCourse">Add Course</a>
-    
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn btn-info mb-3" asp-action="AddCourse">Add Course</a>
+    }
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -15,7 +18,10 @@
                 <th>Description</th>
                 <th>Total Degree</th>
                 <th>Min Degree</th>
-                <th>Actions</th>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <th>Actions</th>
+                }
             </tr>
         </thead>
         <tbody>
@@ -29,11 +35,14 @@
                         <td>@course.Description</td>
                         <td>@course.Total_Degree</td>
                         <td>@course.Min_Degree</td>
-                        <td>
-                            <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@course.Crs_Id">Details</a>
-                            <a class="btn btn-warning btn-sm" asp-action="EditCourse" asp-route-id="@course.Crs_Id">Edit</a>
-                            <a class="btn btn-danger btn-sm" asp-action="DeleteCourse" asp-route-id="@course.Crs_Id">Delete</a>
-                        </td>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <td>
+                                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@course.Crs_Id">Details</a>
+                                <a class="btn btn-warning btn-sm" asp-action="EditCourse" asp-route-id="@course.Crs_Id">Edit</a>
+                                <a class="btn btn-danger btn-sm" asp-action="DeleteCourse" asp-route-id="@course.Crs_Id">Delete</a>
+                            </td>
+                        }
                     </tr>
                 }
             }

@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC01.Repositry;
 
 namespace MVC01.Controllers
 {
+    [Authorize]
     public class CourseController : Controller
     {
         ICourseRepositry courseBL;
@@ -10,6 +12,8 @@ namespace MVC01.Controllers
         {
             courseBL = _courseBL;
         }
+
+        [AllowAnonymous]
         public IActionResult Index()
         {
                 var courses = courseBL.GetAll();
