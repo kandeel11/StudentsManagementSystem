@@ -36,7 +36,7 @@ namespace MVC01.Controllers
             return View(studentcourse);
         }
         [HttpGet]
-        public IActionResult Assign(int id) // Student ID
+        public IActionResult Assign(int id) 
         {
             var student = studentRepositry.GetById(id);
             if (student == null) return NotFound();

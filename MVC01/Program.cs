@@ -48,6 +48,7 @@ namespace MVC01
             builder.Services.AddScoped<ICourseRepositry, CourseRepositry>();
             builder.Services.AddScoped<IInstructorRepositry, InstructorRepositry>();
             builder.Services.AddScoped<IRepositry<StudentCourseEnrollmentVM>, StudentCourseEnrollmentRepositry>();
+            builder.Services.AddScoped<IRepositry<InstructorCourseEnrollmentVM>, InstructorCourseEnrollmentRepositry>();
             var app = builder.Build();
 
 
