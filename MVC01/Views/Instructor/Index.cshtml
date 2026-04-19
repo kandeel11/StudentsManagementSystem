@@ -1,54 +1,91 @@
 ﻿@model ICollection<MVC01.Models.Instructor>
 
-@section Header {
-    <h1 class="text-center">Instructors Management</h1>
-}
+<div class="container mt-5">
+    @* Header Section *@
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <h1 class="fw-bold text-dark mb-1">Instructors Management</h1>
+            <p class="text-muted">Manage your academic staff and their profiles</p>
+        </div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a class="btn btn-primary shadow-sm px-4 rounded-pill d-flex align-items-center mb-2" asp-action="AddInstructor">
+                <i class="fas fa-plus-circle me-2"></i> Add New Instructor
+            </a>
+        }
+    </div>
 
-<div class="container mt-4">
-    <h2>Instructors</h2>
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <a class="btn btn-info mb-3" asp-action="AddInstructor">Add Instructor</a>
-    }
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Instructor ID</th>
-                <th>Name</th>
-                <th>Age</th>
-                <th>Address</th>
-                <th>Email</th>
-                <th>Salary</th>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <th>Actions</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @if(Model != null)
-            {
-                foreach (var instructor in Model)
-                {
+    @* Main Content Card *@
+    <div class="card border-0 shadow-lg rounded-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-light">
                     <tr>
-                        <td>@instructor.Ins_Id</td>
-                        <td>@instructor.Name</td>
-                        <td>@instructor.Age</td>
-                        <td>@instructor.Address</td>
-                        <td>@instructor.Email</td>
-                        <td>@instructor.salary</td>
+                        <th class="ps-4 py-3 text-uppercase fs-7 fw-bold text-secondary">Instructor Info</th>
+                        <th class="py-3 text-uppercase fs-7 fw-bold text-secondary">Address</th>
+                        <th class="py-3 text-uppercase fs-7 fw-bold text-secondary">Salary</th>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <td>
-                                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@instructor.Ins_Id">Details</a>
-                                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@instructor.Ins_Id">Edit</a>
-                                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@instructor.Ins_Id">Delete</a>
-                            </td>
+                            <th class="py-3 text-center text-uppercase fs-7 fw-bold text-secondary">Control Panel</th>
                         }
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var instructor in Model)
+                        {
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle bg-soft-primary text-primary me-3">
+                                            @instructor.Name.Substring(0, 1).ToUpper()
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@instructor.Name</div>
+                                            <div class="text-muted small">@instructor.Email</div>
+                                            <span class="badge bg-light text-dark fw-normal border">Age: @instructor.Age</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-dark"><i class="fas fa-map-marker-alt text-muted me-1"></i> @instructor.Address</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-success">
+                                        $@instructor.salary
+                                    </div>
+                                </td>
+                                @if (User.Identity?.IsAuthenticated == true)
+                                {
+                                    <td class="text-center">
+                                        <div class="dropdown">
+                                            <button class="btn btn-light btn-sm rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <ul class="dropdown-menu shadow border-0 rounded-3">
+                                                <li><a class="dropdown-item py-2" asp-action="Details" asp-route-id="@instructor.Ins_Id text-info"><i class="fas fa-eye me-2 text-info"></i> View Details</a></li>
+                                                <li><a class="dropdown-item py-2" asp-action="Edit" asp-route-id="@instructor.Ins_Id"><i class="fas fa-edit me-2 text-warning"></i> Edit Profile</a></li>
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li><a class="dropdown-item py-2 text-danger" asp-action="Delete" asp-route-id="@instructor.Ins_Id"><i class="fas fa-trash-alt me-2"></i> Remove</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="fas fa-user-slash fa-3x mb-3 d-block"></i>
+                                No instructors found in the system.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>

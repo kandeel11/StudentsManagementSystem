@@ -1,278 +1,790 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Student Management System</title>
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --bg:        #f0f2f8;
+            --surface:   #ffffff;
+            --surface2:  #f7f8fc;
+            --border:    #e4e7f0;
+            --accent:    #4f46e5;
+            --accent-lt: #ede9fe;
+            --accent2:   #06b6d4;
+            --text:      #1a1d2e;
+            --text-muted:#7c83a0;
+            --danger:    #ef4444;
+            --success:   #10b981;
+            --warn:      #f59e0b;
+            --sidebar-w: 272px;
+            --topbar-h:  66px;
+            --radius:    14px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            background-color: #f8f9fa;
-            display: flex;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            margin: 0;
             overflow-x: hidden;
         }
 
-        .sidebar {
-            min-width: 260px;
-            max-width: 260px;
-            background-color: #212529;
-            color: #fff;
-            transition: all 0.3s;
+        /* ════════════════════════════════════════
+           ADMIN - VERTICAL SIDEBAR
+        ════════════════════════════════════════ */
+        body.admin-layout { display: flex; }
+
+        body.admin-layout .sidebar {
+            width: var(--sidebar-w);
+            min-width: var(--sidebar-w);
+            background: var(--text);
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 200;
+            scrollbar-width: none;
         }
+        body.admin-layout .sidebar::-webkit-scrollbar { display: none; }
 
-        .sidebar-brand {
-            padding: 1.5rem 1rem;
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #fff;
+        .s-brand {
+            padding: 1.6rem 1.4rem 1.2rem;
+            display: flex; align-items: center; gap: 0.85rem;
             text-decoration: none;
-            background: rgba(0, 0, 0, 0.2);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .s-brand .b-icon {
+            width: 42px; height: 42px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: #fff; flex-shrink: 0;
+            box-shadow: 0 4px 14px rgba(79,70,229,0.45);
+        }
+        .s-brand .b-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800; font-size: 1.05rem; color: #fff; line-height: 1.15;
+        }
+        .s-brand .b-sub {
+            font-size: 0.62rem; color: rgba(255,255,255,0.4);
+            text-transform: uppercase; letter-spacing: 0.08em;
         }
 
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 0.8rem 1.5rem;
-            margin: 0.2rem 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s;
+        .admin-pill {
+            margin: 1rem 1.4rem 0.4rem;
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff; font-size: 0.63rem; font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            padding: 0.28rem 0.75rem; border-radius: 30px;
+            letter-spacing: 0.07em; text-transform: uppercase; width: fit-content;
         }
 
-        .sidebar .nav-link:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateX(5px);
+        .s-label {
+            padding: 0.9rem 1.4rem 0.3rem;
+            font-size: 0.62rem; font-weight: 700;
+            color: rgba(255,255,255,0.28);
+            letter-spacing: 0.12em; text-transform: uppercase;
         }
 
-        .sidebar .nav-link i {
-            width: 25px;
+        .s-nav { padding: 0.3rem 0.8rem; list-style: none; }
+        .s-nav li { margin-bottom: 2px; }
+        .s-nav .nav-link {
+            display: flex; align-items: center; gap: 0.8rem;
+            padding: 0.68rem 0.85rem; border-radius: 10px;
+            color: rgba(255,255,255,0.55);
+            font-size: 0.855rem; font-weight: 500;
+            text-decoration: none; transition: all 0.2s; position: relative;
+        }
+        .s-nav .nav-link .n-icon {
+            width: 34px; height: 34px; border-radius: 9px;
+            background: rgba(255,255,255,0.07);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; flex-shrink: 0; transition: all 0.2s;
+        }
+        .s-nav .nav-link:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .s-nav .nav-link:hover .n-icon { background: rgba(79,70,229,0.4); color: #c4b5fd; }
+        .s-nav .nav-link.active { color: #fff; background: rgba(79,70,229,0.25); }
+        .s-nav .nav-link.active .n-icon {
+            background: var(--accent); color: #fff;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.5);
+        }
+        .s-nav .nav-link.active::before {
+            content: ''; position: absolute; left: 0; top: 50%;
+            transform: translateY(-50%);
+            width: 3px; height: 60%;
+            background: var(--accent); border-radius: 0 4px 4px 0;
         }
 
-        .main-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
+        .s-div { height: 1px; background: rgba(255,255,255,0.07); margin: 0.6rem 1rem; }
 
-        .header-banner {
-            background: url('/assets/img/home-bg.jpg') no-repeat center center;
-            background-size: cover;
-            color: white;
-            padding: 2rem 2rem;
-            border-radius: 0 0 1rem 1rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+        .s-footer {
+            margin-top: auto; padding: 1rem 0.8rem;
+            border-top: 1px solid rgba(255,255,255,0.07);
         }
+        .s-user {
+            display: flex; align-items: center; gap: 0.7rem;
+            padding: 0.7rem 0.85rem;
+            background: rgba(255,255,255,0.06); border-radius: 12px;
+            margin-bottom: 0.6rem;
+        }
+        .s-user .u-avatar {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.78rem; color: #fff; font-weight: 700;
+        }
+        .s-user .u-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+        .s-user .u-role { font-size: 0.66rem; color: rgba(255,255,255,0.4); }
+        .s-logout {
+            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            width: 100%; padding: 0.6rem;
+            background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+            border-radius: 10px; color: #fca5a5;
+            font-size: 0.82rem; font-weight: 500;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .s-logout:hover { background: rgba(239,68,68,0.2); color: #fca5a5; }
 
-        .main-content {
-            flex: 1;
+        body.admin-layout .page-wrapper { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        body.admin-layout .main-content { flex: 1; padding: 2rem 2.2rem; }
+
+
+        /* ════════════════════════════════════════
+           USER - HORIZONTAL TOP NAV
+        ════════════════════════════════════════ */
+        body.user-layout { display: flex; flex-direction: column; }
+
+        body.user-layout .topbar {
+            display: flex; align-items: center;
+            height: var(--topbar-h);
+            background: var(--surface); border-bottom: 1px solid var(--border);
             padding: 0 2rem;
-            margin-bottom: 2rem;
+            position: sticky; top: 0; z-index: 200;
+            box-shadow: 0 1px 0 var(--border), 0 4px 24px rgba(0,0,0,0.04);
+        }
+        .t-brand {
+            display: flex; align-items: center; gap: 0.75rem;
+            text-decoration: none; margin-right: 2rem; flex-shrink: 0;
+        }
+        .t-brand .b-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; color: #fff;
+            box-shadow: 0 4px 12px rgba(79,70,229,0.35);
+        }
+        .t-brand .b-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800; font-size: 1rem; color: var(--text);
         }
 
-        .footer {
-            background-color: #fff;
-            border-top: 1px solid #dee2e6;
-            padding: 1rem;
-            text-align: center;
-            color: #6c757d;
+        .t-nav { display: flex; align-items: center; gap: 0.15rem; list-style: none; flex: 1; }
+        .t-nav .nav-link {
+            display: flex; align-items: center; gap: 0.45rem;
+            padding: 0.48rem 0.85rem; border-radius: 9px;
+            color: var(--text-muted);
+            font-size: 0.84rem; font-weight: 500;
+            text-decoration: none; transition: all 0.2s; white-space: nowrap;
+        }
+        .t-nav .nav-link i { font-size: 0.78rem; }
+        .t-nav .nav-link:hover { color: var(--text); background: var(--accent-lt); }
+        .t-nav .nav-link.active { color: var(--accent); background: var(--accent-lt); font-weight: 600; }
+
+        .t-actions { display: flex; align-items: center; gap: 0.6rem; margin-left: auto; flex-shrink: 0; }
+        .t-user-btn {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: var(--surface2); border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.38rem 0.9rem 0.38rem 0.45rem;
+            border-radius: 50px;
+            font-size: 0.82rem; font-weight: 500;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .t-user-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .t-user-btn .t-avatar {
+            width: 28px; height: 28px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.68rem; color: #fff;
+        }
+        .t-logout {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: #fef2f2; border: 1px solid #fecaca;
+            color: var(--danger); padding: 0.42rem 0.9rem; border-radius: 9px;
+            font-size: 0.82rem; font-weight: 500;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .t-logout:hover { background: #fee2e2; color: var(--danger); }
+        .t-login-btn {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: var(--accent); color: #fff;
+            padding: 0.42rem 1rem; border-radius: 9px;
+            font-size: 0.82rem; font-weight: 600;
+            text-decoration: none; transition: all 0.2s;
+        }
+        .t-login-btn:hover { background: #4338ca; color: #fff; }
+
+        body.user-layout .page-wrapper { flex: 1; display: flex; flex-direction: column; }
+        body.user-layout .main-content { flex: 1; padding: 2rem 2.2rem; }
+
+
+        /* ════════════════════════════════════════
+           WELCOME HERO
+        ════════════════════════════════════════ */
+        .welcome-hero {
+            background: var(--surface); border-bottom: 1px solid var(--border);
+            padding: 2.2rem 2.5rem;
+            position: relative; overflow: hidden;
+        }
+        .welcome-hero::before {
+            content: ''; position: absolute; top: -80px; right: -80px;
+            width: 340px; height: 340px;
+            background: radial-gradient(circle, rgba(79,70,229,0.09) 0%, transparent 65%);
+            border-radius: 50%;
+        }
+        .welcome-hero::after {
+            content: ''; position: absolute; bottom: -60px; left: 25%;
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, rgba(6,182,212,0.07) 0%, transparent 65%);
+            border-radius: 50%;
+        }
+        .hero-inner {
+            position: relative; z-index: 1;
+            display: flex; align-items: flex-start;
+            justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;
+        }
+        .hero-left { flex: 1; min-width: 260px; }
+        .hero-greeting {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--accent-lt); color: var(--accent);
+            font-size: 0.73rem; font-weight: 700;
+            padding: 0.3rem 0.85rem; border-radius: 30px;
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.04em; text-transform: uppercase;
+        }
+        .welcome-hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800; font-size: 1.95rem;
+            color: var(--text); line-height: 1.2; margin-bottom: 0.5rem;
+        }
+        .welcome-hero h1 span {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero-desc { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; max-width: 540px; }
+        .hero-stats { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1.4rem; }
+        .hero-stat {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 0.8rem 1.2rem;
+            display: flex; align-items: center; gap: 0.7rem; min-width: 130px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .hero-stat:hover { box-shadow: 0 4px 18px rgba(79,70,229,0.1); transform: translateY(-2px); }
+        .hs-icon {
+            width: 38px; height: 38px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+        }
+        .hs-icon.purple { background: var(--accent-lt); color: var(--accent); }
+        .hs-icon.cyan   { background: #ecfeff;           color: var(--accent2); }
+        .hs-icon.green  { background: #d1fae5;           color: var(--success); }
+        .hs-icon.amber  { background: #fef3c7;           color: var(--warn); }
+        .hs-val { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.3rem; color: var(--text); line-height: 1; }
+        .hs-lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+
+        .hero-right { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-end; flex-shrink: 0; }
+        .hero-quick-card {
+            background: linear-gradient(135deg, var(--accent) 0%, #7c3aed 100%);
+            border-radius: var(--radius); padding: 1.1rem 1.4rem;
+            color: #fff; min-width: 220px;
+            box-shadow: 0 8px 28px rgba(79,70,229,0.3);
+        }
+        .qc-label { font-size: 0.68rem; font-weight: 600; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.4rem; }
+        .qc-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; line-height: 1.3; }
+        .qc-hint { font-size: 0.75rem; opacity: 0.7; margin-top: 0.3rem; }
+        .qc-icon { margin-top: 0.8rem; font-size: 1.6rem; opacity: 0.35; }
+
+
+        /* ════════════════════════════════════════
+           CONTENT CARD
+        ════════════════════════════════════════ */
+        .content-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 18px; padding: 2rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04); min-height: 300px;
         }
 
-        @@media (max-width: 768px) {
-            .sidebar {
-                min-width: 80px;
-                max-width: 80px;
-            }
-            .sidebar-brand span, .sidebar .nav-link span {
-                display: none;
-            }
-            .sidebar .nav-link i {
-                margin-right: 0 !important;
-                text-align: center;
-                width: auto;
-            }
-            .sidebar .nav-link {
-                text-align: center;
-                padding: 0.8rem;
-                margin: 0.2rem 0.5rem;
-            }
+
+        /* ════════════════════════════════════════
+           BOOTSTRAP OVERRIDES
+        ════════════════════════════════════════ */
+        .table { color: var(--text); border-color: var(--border); }
+        .table th {
+            background: var(--surface2); color: var(--text-muted);
+            font-size: 0.72rem; text-transform: uppercase;
+            letter-spacing: 0.07em; font-weight: 700; border-color: var(--border);
+        }
+        .table td { border-color: var(--border); font-size: 0.875rem; }
+        .table-hover > tbody > tr:hover > * { background: var(--surface2); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #7c3aed); border: none;
+            border-radius: 10px; font-weight: 600; font-size: 0.85rem;
+            padding: 0.55rem 1.35rem; transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(79,70,229,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(79,70,229,0.4); background: linear-gradient(135deg, #4338ca, #6d28d9); }
+        .btn-danger, .btn-secondary, .btn-success { border-radius: 10px; font-size: 0.85rem; font-weight: 600; }
+
+        .form-control, .form-select {
+            background: var(--surface2); border: 1px solid var(--border);
+            color: var(--text); border-radius: 10px; font-size: 0.875rem;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,0.12); background: #fff;
+        }
+        .form-label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem; }
+        .badge { border-radius: 6px; font-weight: 600; font-size: 0.72rem; }
+
+
+        /* ════════════════════════════════════════
+           TOAST
+        ════════════════════════════════════════ */
+        .toast-wrap { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 9999; }
+        #smsToast {
+            background: #fff; border: 1px solid var(--border); border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12); min-width: 310px; overflow: hidden;
+        }
+        #smsToast .t-bar { height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+        #smsToast.is-error .t-bar { background: linear-gradient(90deg, var(--danger), #fb923c); }
+        #smsToast .t-body { display: flex; align-items: center; gap: 0.85rem; padding: 0.95rem 1.1rem; }
+        #smsToast .t-ico {
+            width: 36px; height: 36px; background: #ede9fe; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.9rem; color: var(--accent); flex-shrink: 0;
+        }
+        #smsToast.is-error .t-ico { background: #fee2e2; color: var(--danger); }
+        #smsToast .t-msg { font-size: 0.875rem; font-weight: 500; color: var(--text); flex: 1; }
+        #smsToast .t-close {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 0.9rem; cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;
+        }
+        #smsToast .t-close:hover { color: var(--text); }
+
+
+        /* ════════════════════════════════════════
+           FOOTER
+        ════════════════════════════════════════ */
+        footer {
+            background: var(--surface); border-top: 1px solid var(--border);
+            padding: 1rem 2.2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            font-size: 0.78rem; color: var(--text-muted);
+        }
+        .f-links { display: flex; gap: 1.25rem; }
+        .f-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+        .f-links a:hover { color: var(--accent); }
+
+
+        /* ════════════════════════════════════════
+           RESPONSIVE
+        ════════════════════════════════════════ */
+        @@media (max-width: 1100px) {
+            body.user-layout .t-nav .nav-link span { display: none; }
+            body.user-layout .t-nav .nav-link { padding: 0.48rem 0.65rem; }
+        }
+        @@media (max-width: 900px) {
+            body.admin-layout .sidebar { width: 70px; min-width: 70px; }
+            body.admin-layout .sidebar .b-name,
+            body.admin-layout .sidebar .b-sub,
+            body.admin-layout .sidebar .admin-pill,
+            body.admin-layout .sidebar .s-label,
+            body.admin-layout .sidebar .nav-text,
+            body.admin-layout .sidebar .u-name,
+            body.admin-layout .sidebar .u-role,
+            body.admin-layout .sidebar .s-logout span { display: none; }
+            body.admin-layout .sidebar .s-nav .nav-link { justify-content: center; padding: 0.6rem; }
+            body.admin-layout .sidebar .s-nav .nav-link .n-icon { margin: 0; }
+            body.admin-layout .sidebar .s-user { justify-content: center; }
+            body.admin-layout .sidebar .s-logout { justify-content: center; padding: 0.6rem; }
+            .hero-right { display: none !important; }
+        }
+        @@media (max-width: 640px) {
+            .welcome-hero { padding: 1.5rem 1.25rem; }
+            .welcome-hero h1 { font-size: 1.45rem; }
+            .hero-stats { gap: 0.6rem; }
+            .hero-stat { min-width: 110px; padding: 0.65rem 0.9rem; }
+            .main-content { padding: 1.25rem !important; }
         }
     </style>
 </head>
 
-<body>
-    <!-- Sidebar Navigation -->
-    <nav class="sidebar position-sticky top-0 vh-100">
-        <a class="sidebar-brand" href="/">
-            <i class="fas fa-graduation-cap me-2"></i> <span>SMS Planner</span>
+@{
+    bool isAdmin = User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+    bool isAuth  = User?.Identity?.IsAuthenticated == true;
+    string layoutClass = isAdmin ? "admin-layout" : "user-layout";
+}
+
+<body class="@layoutClass">
+
+<!-- ══════════════════════════════════════════
+     ADMIN → VERTICAL SIDEBAR
+══════════════════════════════════════════ -->
+@if (isAdmin)
+{
+    <nav class="sidebar">
+        <a class="s-brand" href="/">
+            <div class="b-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div>
+                <div class="b-name">SMS Planner</div>
+                <div class="b-sub">Dashboard</div>
+            </div>
         </a>
-        <div class="mt-3 flex-grow-1">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Student" asp-action="Index">
-                        <i class="fas fa-user-graduate me-2"></i> <span>Students</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Department" asp-action="Index">
-                        <i class="fas fa-building me-2"></i> <span>Departments</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Course" asp-action="Index">
-                        <i class="fas fa-book me-2"></i> <span>Courses</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Instructor" asp-action="Index">
-                        <i class="fas fa-chalkboard-teacher me-2"></i> <span>Instructors</span>
-                    </a>
-                </li>
-               
-               
-                @if (User?.Identity?.IsAuthenticated == true)
-                {
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Register">
-                                <i class="fas fa-user-plus me-2"></i> <span>Add Users</span>
-                            </a>
-                        </li>
-                         <li class="nav-item">
-                    <a class="nav-link" asp-controller="studentCourse" asp-action="Index">
-                                    <span class="mb-0"><i class="fas fa-book-reader me-2"></i> Student Enrollment </span>
 
-                    </a>
-                </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="InstructorCourse" asp-action="Index">
-                                <span class="mb-0"><i class="fas fa-chalkboard-teacher me-2"></i> Instructor Enrollment </span>
-                            </a>
-                        </li>
-                         <li class="nav-item">
-                    <a class="nav-link" asp-controller="Role" asp-action="AddRole">
-                                    <span class="mb-0"><i class="fas fa-user-shield me-2"></i> Add Role </span>
+        <div class="admin-pill"><i class="fas fa-shield-halved me-1"></i> Administrator</div>
 
-                    </a>
-                </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Profile">
-                                <i class="fas fa-user-shield me-2"></i> <span>Profile</span>
-                            </a>
-                        </li>
-                    }
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Account" asp-action="Logout">
-                            <i class="fas fa-sign-out-alt me-2"></i> <span>Logout (@User.Identity.Name)</span>
-                        </a>
-                    </li>
+        <p class="s-label">Core</p>
+        <ul class="s-nav">
+            <li>
+                <a class="nav-link" asp-controller="Student" asp-action="Index">
+                    <span class="n-icon"><i class="fas fa-user-graduate"></i></span>
+                    <span class="nav-text">Students</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Department" asp-action="Index">
+                    <span class="n-icon"><i class="fas fa-building-columns"></i></span>
+                    <span class="nav-text">Departments</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Course" asp-action="Index">
+                    <span class="n-icon"><i class="fas fa-book-open"></i></span>
+                    <span class="nav-text">Courses</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Instructor" asp-action="Index">
+                    <span class="n-icon"><i class="fas fa-chalkboard-user"></i></span>
+                    <span class="nav-text">Instructors</span>
+                </a>
+            </li>
+        </ul>
 
-                }
-                else
-                {
-                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="Account" asp-action="Register">
-                            <i class="fas fa-user-plus me-2"></i> <span>Register</span>
-                        </a>
-                    </li>
-                   
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="Account" asp-action="Login">
-                            <i class="fas fa-sign-in-alt me-2"></i> <span>Login</span>
-                        </a>
-                    </li>
-                }
-            </ul>
+        <div class="s-div"></div>
+        <p class="s-label">Management</p>
+        <ul class="s-nav">
+            <li>
+                <a class="nav-link" asp-controller="studentCourse" asp-action="Index">
+                    <span class="n-icon"><i class="fas fa-book-reader"></i></span>
+                    <span class="nav-text">Student Enrollment</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="InstructorCourse" asp-action="Index">
+                    <span class="n-icon"><i class="fas fa-chalkboard"></i></span>
+                    <span class="nav-text">Instructor Courses</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Account" asp-action="Register">
+                    <span class="n-icon"><i class="fas fa-user-plus"></i></span>
+                    <span class="nav-text">Add Users</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Role" asp-action="AddRole">
+                    <span class="n-icon"><i class="fas fa-user-shield"></i></span>
+                    <span class="nav-text">Roles</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Account" asp-action="Profile">
+                    <span class="n-icon"><i class="fas fa-id-card"></i></span>
+                    <span class="nav-text">Profile</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="s-footer">
+            <div class="s-user">
+                <div class="u-avatar"><i class="fas fa-user"></i></div>
+                <div>
+                    <div class="u-name">@User.Identity.Name</div>
+                    <div class="u-role">Administrator</div>
+                </div>
+            </div>
+            <a class="s-logout" asp-controller="Account" asp-action="Logout">
+                <i class="fas fa-arrow-right-from-bracket"></i>
+                <span>Sign Out</span>
+            </a>
         </div>
     </nav>
+}
 
-    <!-- Main Wrapper -->
-    <div class="main-wrapper w-100">
-        <!-- Page Header -->
-        <header class="header-banner">
-            <div class="container-fluid">
+<!-- ══════════════════════════════════════════
+     USER → HORIZONTAL TOP NAV
+══════════════════════════════════════════ -->
+@if (!isAdmin)
+{
+    <header class="topbar">
+        <a class="t-brand" href="/">
+            <div class="b-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="b-name">SMS Planner</div>
+        </a>
+
+        <ul class="t-nav">
+            <li>
+                <a class="nav-link" asp-controller="Student" asp-action="Index">
+                    <i class="fas fa-user-graduate"></i><span>Students</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Department" asp-action="Index">
+                    <i class="fas fa-building-columns"></i><span>Departments</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Course" asp-action="Index">
+                    <i class="fas fa-book-open"></i><span>Courses</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link" asp-controller="Instructor" asp-action="Index">
+                    <i class="fas fa-chalkboard-user"></i><span>Instructors</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="t-actions">
+            @if (isAuth)
+            {
+                <a class="t-user-btn" asp-controller="Account" asp-action="Profile">
+                    <div class="t-avatar"><i class="fas fa-user"></i></div>
+                    <span>@User.Identity.Name</span>
+                </a>
+                <a class="t-logout" asp-controller="Account" asp-action="Logout">
+                    <i class="fas fa-arrow-right-from-bracket"></i> Logout
+                </a>
+            }
+            else
+            {
+                <a class="t-user-btn" asp-controller="Account" asp-action="Register">
+                    <i class="fas fa-user-plus me-1"></i> Register
+                </a>
+                <a class="t-login-btn" asp-controller="Account" asp-action="Login">
+                    <i class="fas fa-sign-in-alt me-1"></i> Login
+                </a>
+            }
+        </div>
+    </header>
+}
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+
+    <!-- WELCOME HERO -->
+    <div class="welcome-hero">
+        <div class="hero-inner">
+            <div class="hero-left">
+                <div class="hero-greeting">
+                    <i class="fas fa-star"></i>
+                    @if (isAdmin)
+                    {
+                        <span>Admin Control Panel</span>
+                    }
+                    else if (isAuth)
+                    {
+                        <span>Welcome Back</span>
+                    }
+                    else
+                    {
+                        <span>Student Management System</span>
+                    }
+                </div>
+
                 @if (IsSectionDefined("Header"))
                 {
-                    <h1 class="display-6 fw-bold mb-1">@RenderSection("Header", required: false)</h1>
+                    <h1>@RenderSection("Header", required: false)</h1>
                 }
                 else
                 {
-                    <h1 class="display-6 fw-bold mb-1">Student Management System</h1>
+                    <h1>
+                        @if (isAdmin)
+                        {
+                            <text>Manage <span>Everything</span><br/>From One Place</text>
+                        }
+                        else
+                        {
+                            <text>Your Academic <span>Hub</span></text>
+                        }
+                    </h1>
                 }
-                <p class="lead mb-0 fs-6 opacity-75">Manage Your Resources Effectively</p>
+
+                <p class="hero-desc">
+                    @if (isAdmin)
+                    {
+                        <text>
+                            Full control over students, instructors, departments, courses, and enrollments.
+                            Use the sidebar to navigate and manage every aspect of your institution efficiently.
+                        </text>
+                    }
+                    else if (isAuth)
+                    {
+                        <text>
+                            Browse students, departments, courses and instructors using the navigation bar above.
+                            Explore all available academic resources in one place.
+                        </text>
+                    }
+                    else
+                    {
+                        <text>
+                            Welcome to the Student Management System — your central hub for academic data.
+                            Please log in to access your dashboard, or register to get started today.
+                        </text>
+                    }
+                </p>
+
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <a asp-controller="Student" asp-action="Index" class="border-0 hero-stat text-decoration-none">
+                        <div class="hs-icon purple"><i class="fas fa-user-graduate"></i></div>
+                        <div>
+                            <div class="hs-val">Students</div>
+                            <div class="hs-lbl">Enrolled</div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="hero-stat">
+                        <a asp-controller="Course" asp-action="Index" class="border-0 hero-stat text-decoration-none">
+                        <div class="hs-icon cyan"><i class="fas fa-book-open"></i></div>
+                        <div>
+                            <div class="hs-val">Courses</div>
+                            <div class="hs-lbl">Available</div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="hero-stat">
+                        <a asp-controller="Instructor" asp-action="Index" class="border-0 hero-stat text-decoration-none">
+                        <div class="hs-icon green"><i class="fas fa-chalkboard-user"></i></div>
+                        <div>
+                            <div class="hs-val">Instructors</div>
+                            <div class="hs-lbl">Active</div>
+                        </div>
+                        </a>
+                    </div>
+                    <div class="hero-stat">
+                        <a asp-controller="Department" asp-action="Index" class="border-0 hero-stat text-decoration-none">
+                        <div class="hs-icon amber"><i class="fas fa-building-columns"></i></div>
+                        <div>
+                            <div class="hs-val">Departments</div>
+                            <div class="hs-lbl">Running</div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="toast-container position-fixed top-0 end-0 p-3">
-    <div id="rightToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="d-flex">
-            <div class="toast-body">
-                Hello, world! This is a toast on the right.
+
+            <div class="hero-right">
+                <div class="hero-quick-card">
+                    @if (isAdmin)
+                    {
+                        <div class="qc-label"><i class="fas fa-bolt me-1"></i> Quick Access</div>
+                        <div class="qc-title">Manage Enrollments &amp; Roles from the sidebar</div>
+                        <div class="qc-hint">Full admin permissions are active</div>
+                        <div class="qc-icon"><i class="fas fa-shield-halved"></i></div>
+                    }
+                    else
+                    {
+                        <div class="qc-label"><i class="fas fa-circle-info me-1"></i> Getting Started</div>
+                        <div class="qc-title">Use the top navigation to browse resources</div>
+                        <div class="qc-hint">Login for full personalized access</div>
+                        <div class="qc-icon"><i class="fas fa-graduation-cap"></i></div>
+                    }
+                </div>
             </div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <div class="content-card">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer>
+        <span>&copy; @DateTime.Now.Year &mdash; Student Management System</span>
+        <div class="f-links">
+            <a href="#"><i class="fas fa-circle-question me-1"></i>Help</a>
+            <a href="#"><i class="fas fa-lock me-1"></i>Privacy</a>
+            <a href="#"><i class="fas fa-file-lines me-1"></i>Terms</a>
+        </div>
+    </footer>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap">
+    <div id="smsToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="3800">
+        <div class="t-bar"></div>
+        <div class="t-body">
+            <div class="t-ico"><i class="fas fa-check"></i></div>
+            <div class="t-msg">Notification</div>
+            <button class="t-close" data-bs-dismiss="toast" aria-label="Close">
+                <i class="fas fa-xmark"></i>
+            </button>
         </div>
     </div>
 </div>
-        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="bg-white p-4 rounded shadow-sm h-100">
-                @RenderBody()
-            </div>
-        </main>
-   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
 
-        <footer class="footer mt-auto">
-            <p class="mb-0">&copy; @DateTime.Now.Year - Student Management System</p>
-        </footer>
-    </div>
-     
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const toast = document.getElementById('smsToast');
+    const ico   = toast.querySelector('.t-ico i');
 
-     <script>
-       document.addEventListener("DOMContentLoaded", function() {
-    const toastElement = document.getElementById('rightToast');
     @if (TempData["SuccessMessage"] != null)
     {
         <text>
-            toastElement.querySelector('.toast-body').textContent = '@TempData["SuccessMessage"]';
-        </text>
-         <text>
-        const toast = new bootstrap.Toast(toastElement, {
-        delay: 3000 // 3 seconds
-    });
-    
-    toast.show();
-    </text>
-    }else if (TempData["ErrorMessage"] != null)
-    {
-        <text>
-            toastElement.querySelector('.toast-body').textContent = '@TempData["ErrorMessage"]';
-            toastElement.classList.remove('bg-primary');
-            toastElement.classList.add('bg-danger');
+        toast.querySelector('.t-msg').textContent = '@TempData["SuccessMessage"]';
+        new bootstrap.Toast(toast).show();
         </text>
     }
-    
-  
-});
- </script>
-    <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-   
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
+    else if (TempData["ErrorMessage"] != null)
+    {
+        <text>
+        toast.querySelector('.t-msg').textContent = '@TempData["ErrorMessage"]';
+        toast.classList.add('is-error');
+        ico.className = 'fas fa-triangle-exclamation';
+        new bootstrap.Toast(toast).show();
+        </text>
+    }
 
+    // Active nav highlight
+    const path = window.location.pathname.toLowerCase();
+    document.querySelectorAll('.nav-link').forEach(link => {
+        const href = (link.getAttribute('href') || '').toLowerCase();
+        if (href && href !== '/' && path.startsWith(href)) link.classList.add('active');
+    });
+});
+</script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
 </html>

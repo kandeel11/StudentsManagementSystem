@@ -1,51 +1,81 @@
 @model ICollection<MVC01.Models.Course>
-@section Header {
-    <h1 class="text-center">Courses Management</h1>
-}
 
-<div class="container mt-4">
-    <h2>Courses</h2>
-    @if (User.Identity?.IsAuthenticated == true)
-    {
-        <a class="btn btn-info mb-3" asp-action="AddCourse">Add Course</a>
-    }
+<div class="container mt-5 pb-5">
+    @* Page Header *@
+    <div class="d-flex justify-content-between align-items-end mb-5">
+        <div>
+            <h1 class="fw-bold text-dark mb-1">Academic Courses</h1>
+            <p class="text-muted mb-0">Explore and manage the curriculum modules</p>
+        </div>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a class="btn btn-primary shadow-sm px-4 rounded-pill fw-bold" asp-action="AddCourse">
+                <i class="fas fa-plus-circle me-2"></i> Create New Course
+            </a>
+        }
+    </div>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Course ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Total Degree</th>
-                <th>Min Degree</th>
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <th>Actions</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @if(Model != null)
+    @* Courses Grid *@
+    <div class="row g-4">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var course in Model)
             {
-                foreach (var course in Model)
-                {
-                    <tr>
-                        <td>@course.Crs_Id</td>
-                        <td>@course.Name</td>
-                        <td>@course.Description</td>
-                        <td>@course.Total_Degree</td>
-                        <td>@course.Min_Degree</td>
+                <div class="col-md-6 col-xl-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
+                        <div class="card-header bg-transparent border-0 pt-4 px-4 d-flex justify-content-between align-items-start">
+                            <div class="course-icon bg-soft-primary text-primary rounded-3">
+                                <i class="fas fa-book-open fa-lg"></i>
+                            </div>
+                            <span class="badge bg-light text-secondary border">ID: @course.Crs_Id</span>
+                        </div>
+                        
+                        <div class="card-body px-4">
+                            <h5 class="fw-bold text-dark mb-2">@course.Name</h5>
+                            <p class="text-muted small line-clamp-2 mb-4">
+                                @(string.IsNullOrEmpty(course.Description) ? "No description provided for this course." : course.Description)
+                            </p>
+                            
+                            <div class="d-flex gap-3 mb-2">
+                                <div class="flex-fill p-2 bg-light rounded-3 text-center">
+                                    <div class="small text-muted mb-1">Total Score</div>
+                                    <div class="fw-bold text-dark">@course.Total_Degree</div>
+                                </div>
+                                <div class="flex-fill p-2 bg-light rounded-3 text-center">
+                                    <div class="small text-muted mb-1">Passing</div>
+                                    <div class="fw-bold text-success">@course.Min_Degree</div>
+                                </div>
+                            </div>
+                        </div>
+
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <td>
-                                <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@course.Crs_Id">Details</a>
-                                <a class="btn btn-warning btn-sm" asp-action="EditCourse" asp-route-id="@course.Crs_Id">Edit</a>
-                                <a class="btn btn-danger btn-sm" asp-action="DeleteCourse" asp-route-id="@course.Crs_Id">Delete</a>
-                            </td>
+                            <div class="card-footer bg-light border-0 p-3 mt-auto rounded-bottom-4">
+                                <div class="d-flex justify-content-around">
+                                    <a class="btn btn-link text-info text-decoration-none fw-medium" asp-action="Details" asp-route-id="@course.Crs_Id">
+                                        <i class="fas fa-info-circle me-1"></i> Details
+                                    </a>
+                                    <a class="btn btn-link text-warning text-decoration-none fw-medium" asp-action="EditCourse" asp-route-id="@course.Crs_Id">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
+                                    <a class="btn btn-link text-danger text-decoration-none fw-medium" asp-action="DeleteCourse" asp-route-id="@course.Crs_Id">
+                                        <i class="fas fa-trash-alt me-1"></i> Remove
+                                    </a>
+                                </div>
+                            </div>
                         }
-                    </tr>
-                }
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <div class="text-muted">
+                    <i class="fas fa-folder-open fa-3x mb-3"></i>
+                    <h4>No courses found.</h4>
+                </div>
+            </div>
+        }
+    </div>
 </div>

@@ -1,44 +1,65 @@
-﻿<div class="container ">
-@if (User.Identity?.IsAuthenticated == true)
-{
-    <a class="btn btn-info " asp-action="AddStudent">Add Student</a>
-}
-@section Header{
-    <h1>Students Management</h1>
+﻿<div class="container mt-4">
+    @section Header {
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="fw-bold text-primary">Student Management</h1>
+            
+        </div>
     }
 
-
-<table class="table table-striped">
-    <tr>
-        <th>SSn</th>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Image</th>
-        @if (User.Identity?.IsAuthenticated == true)
-        {
-            <th>Actions</th>
-        }
-    </tr>
-    @foreach (var student in Model)
-    {
-        <tr>
-            <td>@student.SSn</td>
-            <td>@student.Name</td>
-            <td>@student.Address</td>
-            <td>@student.Email</td>
-            <td>@student.Phone</td>
-            <td><img src="/Images/@student.Image" alt="Student Image" width="100" /></td>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
             @if (User.Identity?.IsAuthenticated == true)
             {
-                <td>
-                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@student.SSn">Details</a>
-                    <a class="btn btn-warning btn-sm" asp-action="EditStudent" asp-route-id="@student.SSn">Edit</a>
-                    <a class="btn btn-danger btn-sm" asp-action="DeleteStudent" asp-route-id="@student.SSn">Delete</a>
-                </td>
+                <a class="btn btn-primary shadow-sm px-4 rounded-pill" asp-action="AddStudent">
+                    <i class="bi bi-plus-lg"></i> Add New Student
+                </a>
             }
-        </tr>
-    }
-</table>
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Student</th>
+                        <th>Address</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <th class="text-center">Actions</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <img src="/Images/@student.Image"
+                                         class="rounded-circle border shadow-sm me-3"
+                                         alt="Profile"
+                                         style="width: 48px; height: 48px; object-fit: cover;" />
+                                    <div>
+                                        <div class="fw-bold">@student.Name</div>
+                                        <small class="text-muted">SSN: @student.SSn</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="text-secondary">@student.Address</span></td>
+                            <td><a href="mailto:@student.Email" class="text-decoration-none">@student.Email</a></td>
+                            <td>@student.Phone</td>
+                            @if (User.Identity?.IsAuthenticated == true)
+                            {
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-outline-info btn-sm rounded-start-pill px-3" asp-action="Details" asp-route-id="@student.SSn">Details</a>
+                                        <a class="btn btn-outline-warning btn-sm px-3" asp-action="EditStudent" asp-route-id="@student.SSn">Edit</a>
+                                        <a class="btn btn-outline-danger btn-sm rounded-end-pill px-3" asp-action="DeleteStudent" asp-route-id="@student.SSn">Delete</a>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
